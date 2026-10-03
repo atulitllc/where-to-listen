@@ -23,6 +23,10 @@ CATS = [
     "Sports",
     "Music",
     "Fiction",
+    "Health",
+    "Learning",
+    "Society",
+    "Kids",
 ]
 
 BOOT = """<script>
@@ -146,13 +150,20 @@ def sleeve(show, large=False):
 
 
 def load():
-    editorial = {row["slug"]: row for row in json.loads((ROOT / "data/editorial.json").read_text())}
-    snapshot = json.loads((ROOT / "data/feed_snapshot.json").read_text())
+    catalog_path = ROOT / "data/catalog.json"
+    if catalog_path.exists():
+        rows = json.loads(catalog_path.read_text())
+    else:
+        editorial = {row["slug"]: row for row in json.loads((ROOT / "data/editorial.json").read_text())}
+        snapshot = json.loads((ROOT / "data/feed_snapshot.json").read_text())
+        rows = []
+        for row in snapshot:
+            rows.append({**row, **editorial[row["slug"]]})
     shows = []
-    for row in snapshot:
-        extra = editorial[row["slug"]]
-        show = {**row, **extra}
+    for row in rows:
+        show = dict(row)
         show["dateLabel"] = fmt_date(show.get("latestDate") or "")
+        show["site"] = show.get("site") or ""
         shows.append(show)
     shows.sort(key=lambda s: s["title"].lower())
     return shows
@@ -171,15 +182,19 @@ def write_pages(shows):
             <p class="host">{esc(show["host"])}</p>
           </div>
         </a>''')
+    present = {s["category"] for s in shows}
     chips = ['<button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>']
     for cat in CATS:
+        if cat in present:
+            chips.append(f'<button type="button" class="chip" data-filter="{esc(cat)}" aria-pressed="false">{esc(cat)}</button>')
+    for cat in sorted(present - set(CATS)):
         chips.append(f'<button type="button" class="chip" data-filter="{esc(cat)}" aria-pressed="false">{esc(cat)}</button>')
     home = head("Where to Listen", 0, "home") + f'''
 <main id="content">
   <section class="hero wrap">
     <p class="kicker">On air · Browse only · No player</p>
     <h1>Find the show.<br>Follow their feed.</h1>
-    <p class="lede">A shelf of well-known podcasts. Artwork and titles point at the real shows. The audio stays on the publisher’s own feed. Nothing here is for sale.</p>
+    <p class="lede">Hundreds of shows, one shelf. Artwork and titles point at the real podcasts. The audio stays on each publisher’s feed. Nothing here is for sale.</p>
     <div class="tools">
       <label class="search">
         <input id="q" type="search" placeholder="Search shows, hosts, topics" autocomplete="off">
@@ -207,8 +222,8 @@ def write_pages(shows):
     <p>No episode audio, no embedded players, no copied MP3s, and no pirate mirrors. There is nothing for sale. Each show page links out to the publisher’s own website and to that show’s public RSS feed, labeled as external.</p>
     <p>The line called “last episode listed in the official feed” is a title and a date read from the publisher’s RSS. It is not a file, and it is not a promise that the feed still looks the same tomorrow.</p>
     <h2>Where the facts come from</h2>
-    <p>This build did not call the Podcast Index API. No Podcast Index API key was available, and the <a href="https://github.com/Podcastindex-org/legal/blob/main/TermsOfService.md">Podcast Index API Terms of Service</a> (section 5.5) say not to scrape, build a database from, or keep permanent copies of content returned by those APIs. Podcast Index’s own site describes the open index as free to use; that does not override the API terms for API responses, so this shelf does not store one.</p>
-    <p>Instead, each show was chosen by hand. On {FETCHED}, the publisher’s public RSS feed was read for the show title, the feed URL, the artwork address the feed already publishes for podcast apps, and the title of the latest episode. Descriptions on these pages are short originals, not the feed’s HTML.</p>
+    <p>Podcast Index (<a href="https://podcastindex.org/">podcastindex.org</a>) is the open directory this shelf is built around. Their API is free, and their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called and no Podcast Index response is stored here. This is not a Podcast Index product and not a partner site.</p>
+    <p>On {FETCHED} the shelf was filled from publisher RSS feeds. Public podcast charts were used only to find those feed addresses, then discarded. Each page keeps the show title, the feed URL, the artwork address already published in that feed, a short description, and the title of the latest episode. Hand-written notes are used where we had them. Otherwise the description is the opening of the show’s own feed summary, trimmed so the page does not dump feed HTML.</p>
     <p>Artwork is hotlinked from that feed address. The image bytes are not copied into this site. If a publisher would rather not be hotlinked, the picture should be removed and the monogram left in its place. Feeds are linked so you can subscribe in your own app.</p>
     <h2>A note on Podcast Index</h2>
     <p>Podcast Index (<a href="https://podcastindex.org/">podcastindex.org</a>) is an open podcast directory with a developer API. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark. If API credentials are added later, a refresh should follow their current terms, including any required attribution, and should not keep a permanent copy of API content beyond what those terms allow.</p>
@@ -221,6 +236,10 @@ def write_pages(shows):
 
     show_dir = ROOT / "shows"
     show_dir.mkdir(exist_ok=True)
+    keep = {f"{show['slug']}.html" for show in shows}
+    for stale in show_dir.glob("*.html"):
+        if stale.name not in keep:
+            stale.unlink()
     for show in shows:
         flag = ' <span class="flag">Explicit</span>' if show.get("explicit") else ""
         episode = ""
@@ -244,7 +263,7 @@ def write_pages(shows):
         <p class="blurb">{esc(show["blurb"])}</p>
         {episode}
         <div class="actions">
-          <a class="btn primary" href="{esc(show["site"])}" rel="noopener noreferrer">Official site <span class="ext">External</span></a>
+          {('<a class="btn primary" href="' + esc(show["site"]) + '" rel="noopener noreferrer">Official site <span class="ext">External</span></a>') if show.get("site") else ""}
           <a class="btn" href="{esc(show["feed"])}" rel="noopener noreferrer">Official RSS feed <span class="ext">External</span></a>
         </div>
         <p class="fine">Where to Listen does not host this show. Subscribe in your own podcast app with the feed, or listen where the publisher says to listen. Artwork is loaded from the image address in that same feed.</p>
@@ -286,11 +305,11 @@ def write_credits(shows):
         "- Podcast Index API Terms of Service v1.1, section 5.5, prohibit scraping, building a database from, or keeping permanent copies of content returned by the APIs, and prohibit publicly displaying that API content unless the content owner or the law allows it. See https://github.com/Podcastindex-org/legal/blob/main/TermsOfService.md",
         "- Podcast Index’s public homepage says the core index is available for free, for any use (https://podcastindex.org/). That mission statement is not treated here as permission to store API responses. This site does not copy the Podcast Index database and does not present itself as a Podcast Index product or partner (API terms, section 7.3).",
         "- No episode enclosures, MP3s, or M4A files were downloaded or linked.",
-        "- Show blurbs on the site are original short paraphrases written for this catalog. Feed description HTML was not copied onto the pages.",
+        "- A core set of blurbs was written for this catalog. Additional descriptions are the opening of each show’s own feed summary, trimmed. Full feed HTML is not stored.",
         "",
         "## What was used",
         "",
-        f"On {FETCHED}, each publisher’s own public RSS feed was fetched and only these fields were kept: channel title, feed URL, `itunes:image` or channel image URL, and the title plus publish date of one recent episode. Apple’s public iTunes Search API was used only as a temporary lookup to discover some feed URLs. Apple’s result payloads were not stored; the feed URL was then checked by reading the publisher RSS itself.",
+        f"On {FETCHED}, public top-podcast charts were read only to discover feed URLs. Those chart payloads were not committed. Each publisher RSS was then read for channel title, feed URL, artwork URL (`itunes:image` or channel image), a shortened description, and one recent episode title and date. Podcast Index was not queried, because no free-plan API credentials were present, and a Podcast Index catalog dump is not in this repo.",
         "",
         "Artwork is hotlinked from the image URL the show’s feed already publishes for podcast apps and directories. Image files are not in this repository. If the image fails to load, the page shows a monogram.",
         "",
@@ -332,7 +351,7 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 - Podcast Index API keys were not in the environment, so the API was not used.
 - Podcast Index API terms (section 5.5) do not allow a permanent database of content returned from the API. This site does not contain one.
 - Metadata that is on the pages was read from each show’s public RSS on {FETCHED}: title, feed URL, artwork URL, latest episode title and date.
-- Blurbs are original one-sentence paraphrases.
+- A core set of blurbs was written for the shelf. The rest are trimmed openings of each show’s own feed summary, not a feed HTML dump and not a Podcast Index dump.
 - Outbound links are the official site and the official RSS only. Enclosure URLs were discarded and are not in `data/shows.json` or the HTML.
 - For Behind the Bastards, the newest item in the iHeart feed was a sibling show (“It Could Happen Here”). The page uses the newest item that is actually a Behind the Bastards episode.
 - Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top.
@@ -386,7 +405,7 @@ def main():
     shows = load()
     missing_cats = sorted({s["category"] for s in shows} - set(CATS))
     if missing_cats:
-        raise SystemExit(f"unknown categories: {missing_cats}")
+        print("extra categories", missing_cats)
     public = write_pages(shows)
     write_credits(public)
     write_notes(len(public))
