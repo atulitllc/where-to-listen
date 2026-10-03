@@ -1,0 +1,541 @@
+[
+  {
+    "slug": "the-daily",
+    "category": "News",
+    "host": "The New York Times",
+    "site": "https://www.nytimes.com/the-daily",
+    "blurb": "A weekday news show from the Times, built around one story instead of a headline roundup."
+  },
+  {
+    "slug": "up-first",
+    "category": "News",
+    "host": "NPR",
+    "site": "https://www.npr.org/podcasts/510318/up-first",
+    "blurb": "NPR's short morning briefing on the stories leading the day."
+  },
+  {
+    "slug": "today-explained",
+    "category": "News",
+    "host": "Vox",
+    "site": "https://www.vox.com/today-explained",
+    "blurb": "Vox takes one news story and explains the stakes in a single sitting."
+  },
+  {
+    "slug": "the-ezra-klein-show",
+    "category": "News",
+    "host": "Ezra Klein",
+    "site": "https://www.nytimes.com/ezra-klein-podcast",
+    "blurb": "Long interviews about politics, policy, and how people change their minds."
+  },
+  {
+    "slug": "the-npr-politics-podcast",
+    "category": "News",
+    "host": "NPR",
+    "site": "https://www.npr.org/podcasts/510310/npr-politics-podcast",
+    "blurb": "NPR's political desk on the week in Washington and the campaigns around it."
+  },
+  {
+    "slug": "pod-save-america",
+    "category": "News",
+    "host": "Jon Favreau, Jon Lovett, Dan Pfeiffer, and Tommy Vietor",
+    "site": "https://crooked.com/podcast-series/pod-save-america/",
+    "blurb": "Former Obama staffers talk through U.S. politics with a point of view."
+  },
+  {
+    "slug": "the-journal",
+    "category": "News",
+    "host": "The Wall Street Journal",
+    "site": "https://www.wsj.com/podcasts/the-journal",
+    "blurb": "One business or news story a day, reported by the Wall Street Journal."
+  },
+  {
+    "slug": "this-american-life",
+    "category": "Narrative",
+    "host": "Ira Glass",
+    "site": "https://www.thisamericanlife.org/",
+    "blurb": "Public-radio stories that follow ordinary people into unexpected situations."
+  },
+  {
+    "slug": "heavyweight",
+    "category": "Narrative",
+    "host": "Jonathan Goldstein",
+    "site": "https://www.pushkin.fm/podcasts/heavyweight",
+    "blurb": "The host helps someone revisit an old regret and see if it can still be repaired."
+  },
+  {
+    "slug": "snap-judgment",
+    "category": "Narrative",
+    "host": "Glynn Washington",
+    "site": "https://snapjudgment.org/",
+    "blurb": "True stories told with music and a cinematic sense of timing."
+  },
+  {
+    "slug": "embedded",
+    "category": "Narrative",
+    "host": "NPR",
+    "site": "https://www.npr.org/podcasts/510311/embedded",
+    "blurb": "NPR spends a season inside one reported story rather than jumping to the next headline."
+  },
+  {
+    "slug": "search-engine",
+    "category": "Narrative",
+    "host": "PJ Vogt",
+    "site": "https://www.pjvogt.com/",
+    "blurb": "A show that starts with a nagging question and follows the reporting wherever it goes."
+  },
+  {
+    "slug": "twenty-thousand-hertz",
+    "category": "Narrative",
+    "host": "Dallas Taylor",
+    "site": "https://www.20k.org/",
+    "blurb": "Stories about sound itself: the noises, voices, and design choices people usually tune out."
+  },
+  {
+    "slug": "serial",
+    "category": "True crime",
+    "host": "Sarah Koenig",
+    "site": "https://serialpodcast.org/",
+    "blurb": "One investigation told in chapters, the show that pulled true crime into longform audio."
+  },
+  {
+    "slug": "crime-junkie",
+    "category": "True crime",
+    "host": "Ashley Flowers",
+    "site": "https://crimejunkiepodcast.com/",
+    "blurb": "Tight case walk-throughs, with updates when new reporting comes out."
+  },
+  {
+    "slug": "criminal",
+    "category": "True crime",
+    "host": "Phoebe Judge",
+    "site": "https://thisiscriminal.com/",
+    "blurb": "Crime stories told more for the people in them than for the shock."
+  },
+  {
+    "slug": "casefile",
+    "category": "True crime",
+    "host": "Casefile",
+    "site": "https://casefilepodcast.com/",
+    "blurb": "Carefully researched case narratives, told in a restrained style."
+  },
+  {
+    "slug": "my-favorite-murder",
+    "category": "True crime",
+    "host": "Karen Kilgariff and Georgia Hardstark",
+    "site": "https://www.myfavoritemurder.com/",
+    "blurb": "Two comedians retell well-known cases and talk about staying safe."
+  },
+  {
+    "slug": "conan-obrien-needs-a-friend",
+    "category": "Comedy",
+    "host": "Conan O'Brien",
+    "site": "https://teamcoco.com/podcasts/conan-obrien-needs-a-friend",
+    "blurb": "Celebrity conversations that wander off the usual press-tour script."
+  },
+  {
+    "slug": "smartless",
+    "category": "Comedy",
+    "host": "Jason Bateman, Sean Hayes, and Will Arnett",
+    "site": "https://www.smartless.com/",
+    "blurb": "The hosts surprise each other with a guest and then try to keep up."
+  },
+  {
+    "slug": "wtf-with-marc-maron",
+    "category": "Comedy",
+    "host": "Marc Maron",
+    "site": "https://www.wtfpod.com/",
+    "blurb": "Long, unhurried interviews, often with comedians, recorded in a garage."
+  },
+  {
+    "slug": "wait-wait-dont-tell-me",
+    "category": "Comedy",
+    "host": "Peter Sagal",
+    "site": "https://www.npr.org/podcasts/344098539/wait-wait-don-t-tell-me",
+    "blurb": "NPR's news quiz, with panelists riffing on the week that was."
+  },
+  {
+    "slug": "armchair-expert",
+    "category": "Comedy",
+    "host": "Dax Shepard",
+    "site": "https://armchairexpertpod.com/",
+    "blurb": "Celebrity interviews mixed with personal asides from Shepard and Monica Padman."
+  },
+  {
+    "slug": "good-hang",
+    "category": "Comedy",
+    "host": "Amy Poehler",
+    "site": "https://www.theringer.com/podcasts/good-hang-with-amy-poehler",
+    "blurb": "Amy Poehler hangs out with people she actually likes talking to."
+  },
+  {
+    "slug": "las-culturistas",
+    "category": "Comedy",
+    "host": "Matt Rogers and Bowen Yang",
+    "site": "https://twitter.com/LasCulturistas",
+    "blurb": "A high-energy pop-culture conversation, scored like a game show."
+  },
+  {
+    "slug": "my-brother-my-brother-and-me",
+    "category": "Comedy",
+    "host": "Griffin, Justin, and Travis McElroy",
+    "site": "https://www.mbmbam.com/",
+    "blurb": "Three brothers answer listener questions and rarely stay on the prompt."
+  },
+  {
+    "slug": "the-joe-rogan-experience",
+    "category": "Comedy",
+    "host": "Joe Rogan",
+    "site": "https://www.joerogan.com/",
+    "blurb": "Freewheeling long interviews on comedy, fighting, science, and whatever else comes up."
+  },
+  {
+    "slug": "fresh-air",
+    "category": "Culture",
+    "host": "Terry Gross",
+    "site": "https://www.npr.org/podcasts/381444908/fresh-air",
+    "blurb": "Long interviews with artists, writers, and newsmakers."
+  },
+  {
+    "slug": "pop-culture-happy-hour",
+    "category": "Culture",
+    "host": "NPR",
+    "site": "https://www.npr.org/podcasts/510282/pop-culture-happy-hour",
+    "blurb": "A roundtable on the movies, TV, and music people are talking about."
+  },
+  {
+    "slug": "code-switch",
+    "category": "Culture",
+    "host": "NPR",
+    "site": "https://www.npr.org/podcasts/510312/codeswitch",
+    "blurb": "Race, identity, and culture, reported by NPR's Code Switch team."
+  },
+  {
+    "slug": "on-being",
+    "category": "Culture",
+    "host": "Krista Tippett",
+    "site": "https://onbeing.org/",
+    "blurb": "Conversations about meaning, faith, and the inner life."
+  },
+  {
+    "slug": "office-ladies",
+    "category": "Culture",
+    "host": "Jenna Fischer and Angela Kinsey",
+    "site": "https://officeladies.com/",
+    "blurb": "A scene-by-scene revisit of The Office from two people who were in it."
+  },
+  {
+    "slug": "normal-gossip",
+    "category": "Culture",
+    "host": "Kelsey McKinney",
+    "site": "https://defector.com/",
+    "blurb": "Anonymous, lightly soapy stories from real people's lives, told with permission."
+  },
+  {
+    "slug": "if-books-could-kill",
+    "category": "Culture",
+    "host": "Michael Hobbes and Peter Shamshiri",
+    "site": "https://www.patreon.com/IfBooksPod",
+    "blurb": "Skeptical reads of the airport nonfiction that shapes popular opinion."
+  },
+  {
+    "slug": "maintenance-phase",
+    "category": "Culture",
+    "host": "Aubrey Gordon and Michael Hobbes",
+    "site": "https://www.maintenancephase.com/",
+    "blurb": "A critical look at wellness fads, diet science, and the stories sold with them."
+  },
+  {
+    "slug": "the-rewatchables",
+    "category": "Culture",
+    "host": "The Ringer",
+    "site": "https://www.theringer.com/podcasts/the-rewatchables",
+    "blurb": "A favorite movie, rewatched and argued over minute by minute."
+  },
+  {
+    "slug": "99-percent-invisible",
+    "category": "Culture",
+    "host": "Roman Mars",
+    "site": "https://99percentinvisible.org/",
+    "blurb": "Design stories about the unnoticed systems that shape cities and objects."
+  },
+  {
+    "slug": "hardcore-history",
+    "category": "History",
+    "host": "Dan Carlin",
+    "site": "https://www.dancarlin.com/",
+    "blurb": "Multi-hour narrative episodes on war and collapse, released when they are finished."
+  },
+  {
+    "slug": "throughline",
+    "category": "History",
+    "host": "Rund Abdelfatah and Ramtin Arablouei",
+    "site": "https://www.npr.org/podcasts/510333/throughline",
+    "blurb": "The history sitting underneath today's headlines."
+  },
+  {
+    "slug": "revolutions",
+    "category": "History",
+    "host": "Mike Duncan",
+    "site": "https://revolutionspodcast.libsyn.com/",
+    "blurb": "Narrative histories of revolutions, one era at a time."
+  },
+  {
+    "slug": "the-rest-is-history",
+    "category": "History",
+    "host": "Tom Holland and Dominic Sandbrook",
+    "site": "https://therestishistory.com/",
+    "blurb": "Two historians talk through the past with arguments, jokes, and side paths."
+  },
+  {
+    "slug": "behind-the-bastards",
+    "category": "History",
+    "host": "Robert Evans",
+    "site": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/",
+    "blurb": "Biographies of awful powerful people, told with dark humor."
+  },
+  {
+    "slug": "youre-wrong-about",
+    "category": "History",
+    "host": "Sarah Marshall",
+    "site": "https://yourewrongabout.com/",
+    "blurb": "A second look at people and events the press got wrong the first time."
+  },
+  {
+    "slug": "radiolab",
+    "category": "Science",
+    "host": "Latif Nasser and Lulu Miller",
+    "site": "https://www.radiolab.org/",
+    "blurb": "Curious questions braided with science, philosophy, and dense sound design."
+  },
+  {
+    "slug": "hidden-brain",
+    "category": "Science",
+    "host": "Shankar Vedantam",
+    "site": "https://www.hiddenbrain.org/",
+    "blurb": "How psychology quietly shapes choices people think they are making freely."
+  },
+  {
+    "slug": "huberman-lab",
+    "category": "Science",
+    "host": "Andrew Huberman",
+    "site": "https://www.hubermanlab.com/",
+    "blurb": "Neuroscience explained for everyday habits, from a Stanford lab."
+  },
+  {
+    "slug": "ologies",
+    "category": "Science",
+    "host": "Alie Ward",
+    "site": "https://www.alieward.com/ologies",
+    "blurb": "A different kind of specialist each episode, interviewed by a very curious host."
+  },
+  {
+    "slug": "science-vs",
+    "category": "Science",
+    "host": "Wendy Zukerman",
+    "site": "https://open.spotify.com/show/5lY4b5PGOvMuOYOjOVEcb9",
+    "blurb": "A popular claim, checked against what the studies actually say."
+  },
+  {
+    "slug": "ted-radio-hour",
+    "category": "Science",
+    "host": "Manoush Zomorodi",
+    "site": "https://www.npr.org/podcasts/510298/ted-radio-hour",
+    "blurb": "Ideas from the TED stage, unpacked in a public-radio hour."
+  },
+  {
+    "slug": "philosophize-this",
+    "category": "Science",
+    "host": "Stephen West",
+    "site": "https://www.philosophizethis.org/",
+    "blurb": "Philosophy taught as a continuing story, from the history of ideas forward."
+  },
+  {
+    "slug": "lex-fridman-podcast",
+    "category": "Science",
+    "host": "Lex Fridman",
+    "site": "https://lexfridman.com/",
+    "blurb": "Very long interviews on AI, science, and how people think."
+  },
+  {
+    "slug": "stuff-you-should-know",
+    "category": "Science",
+    "host": "Josh Clark and Chuck Bryant",
+    "site": "https://www.iheart.com/podcast/105-stuff-you-should-know-26940277/",
+    "blurb": "Two hosts explain how everyday things work."
+  },
+  {
+    "slug": "planet-money",
+    "category": "Business",
+    "host": "NPR",
+    "site": "https://www.npr.org/podcasts/510289/planet-money",
+    "blurb": "The economy explained through one surprising story at a time."
+  },
+  {
+    "slug": "the-indicator",
+    "category": "Business",
+    "host": "NPR",
+    "site": "https://www.npr.org/podcasts/510325/the-indicator-from-planet-money",
+    "blurb": "A short daily look at one number moving through the economy."
+  },
+  {
+    "slug": "freakonomics-radio",
+    "category": "Business",
+    "host": "Stephen J. Dubner",
+    "site": "https://freakonomics.com/",
+    "blurb": "Hidden incentives and odd questions, in the spirit of the Freakonomics books."
+  },
+  {
+    "slug": "how-i-built-this",
+    "category": "Business",
+    "host": "Guy Raz",
+    "site": "https://wondery.com/shows/how-i-built-this/",
+    "blurb": "Founders retell the messy early days of well-known companies."
+  },
+  {
+    "slug": "acquired",
+    "category": "Business",
+    "host": "Ben Gilbert and David Rosenthal",
+    "site": "https://www.acquired.fm/",
+    "blurb": "The history and strategy behind great companies, one deep episode at a time."
+  },
+  {
+    "slug": "the-diary-of-a-ceo",
+    "category": "Business",
+    "host": "Steven Bartlett",
+    "site": "https://steven.com/",
+    "blurb": "Long interviews on business, psychology, and performance."
+  },
+  {
+    "slug": "invest-like-the-best",
+    "category": "Business",
+    "host": "Patrick O'Shaughnessy",
+    "site": "https://colossus.com/",
+    "blurb": "Investors and founders on how they make decisions."
+  },
+  {
+    "slug": "odd-lots",
+    "category": "Business",
+    "host": "Joe Weisenthal and Tracy Alloway",
+    "site": "https://www.bloomberg.com/podcasts/odd_lots",
+    "blurb": "Bloomberg's look at the strange corners of markets."
+  },
+  {
+    "slug": "pivot",
+    "category": "Business",
+    "host": "Kara Swisher and Scott Galloway",
+    "site": "https://podcasts.voxmedia.com/show/pivot",
+    "blurb": "Tech and business news, argued by two people with strong opinions."
+  },
+  {
+    "slug": "all-in",
+    "category": "Business",
+    "host": "Chamath Palihapitiya, Jason Calacanis, David Sacks, and David Friedberg",
+    "site": "https://www.allinpodcast.com/",
+    "blurb": "Four investors debating tech, markets, and politics."
+  },
+  {
+    "slug": "the-tim-ferriss-show",
+    "category": "Business",
+    "host": "Tim Ferriss",
+    "site": "https://tim.blog/podcast",
+    "blurb": "Long interviews about the tactics of high-performing people."
+  },
+  {
+    "slug": "the-vergecast",
+    "category": "Technology",
+    "host": "The Verge",
+    "site": "https://www.theverge.com/the-vergecast",
+    "blurb": "The week's consumer tech, argued over by Verge hosts."
+  },
+  {
+    "slug": "decoder",
+    "category": "Technology",
+    "host": "Nilay Patel",
+    "site": "https://www.theverge.com/decoder",
+    "blurb": "Interviews about how technology companies actually make decisions."
+  },
+  {
+    "slug": "hard-fork",
+    "category": "Technology",
+    "host": "Kevin Roose and Casey Newton",
+    "site": "https://www.nytimes.com/column/hard-fork",
+    "blurb": "A New York Times conversation about the tech industry and where it is going."
+  },
+  {
+    "slug": "accidental-tech-podcast",
+    "category": "Technology",
+    "host": "Marco Arment, Casey Liss, and John Siracusa",
+    "site": "https://atp.fm/",
+    "blurb": "Three friends talking Apple, software, and the week's nerd news."
+  },
+  {
+    "slug": "the-talk-show",
+    "category": "Technology",
+    "host": "John Gruber",
+    "site": "https://daringfireball.net/thetalkshow",
+    "blurb": "A sporadic interview show from the writer of Daring Fireball."
+  },
+  {
+    "slug": "darknet-diaries",
+    "category": "Technology",
+    "host": "Jack Rhysider",
+    "site": "https://darknetdiaries.com/",
+    "blurb": "True stories from hacking, security failures, and the people involved."
+  },
+  {
+    "slug": "cortex",
+    "category": "Technology",
+    "host": "CGP Grey and Myke Hurley",
+    "site": "https://www.relay.fm/cortex",
+    "blurb": "How two creators organize their work and their tools."
+  },
+  {
+    "slug": "the-bill-simmons-podcast",
+    "category": "Sports",
+    "host": "Bill Simmons",
+    "site": "https://www.theringer.com/podcasts/the-bill-simmons-podcast",
+    "blurb": "Wide-ranging sports talk, guests, and mailbags from The Ringer."
+  },
+  {
+    "slug": "pardon-my-take",
+    "category": "Sports",
+    "host": "PFT Commenter and Big Cat",
+    "site": "https://www.barstoolsports.com/shows/pardon-my-take",
+    "blurb": "Loud, joke-heavy sports talk from Barstool."
+  },
+  {
+    "slug": "song-exploder",
+    "category": "Music",
+    "host": "Hrishikesh Hirway",
+    "site": "https://songexploder.net/",
+    "blurb": "Musicians take one song apart, track by track."
+  },
+  {
+    "slug": "switched-on-pop",
+    "category": "Music",
+    "host": "Nate Sloan and Charlie Harding",
+    "site": "https://www.switchedonpop.com/",
+    "blurb": "Pop songs explained with actual music theory, without the lecture voice."
+  },
+  {
+    "slug": "dissect",
+    "category": "Music",
+    "host": "Cole Cuchna",
+    "site": "https://dissectpodcast.com/",
+    "blurb": "One album, pulled apart song by song across a whole season."
+  },
+  {
+    "slug": "the-adventure-zone",
+    "category": "Fiction",
+    "host": "The McElroys",
+    "site": "https://www.themcelroy.family/",
+    "blurb": "A family plays a tabletop game and edits it into a comedy serial."
+  },
+  {
+    "slug": "welcome-to-night-vale",
+    "category": "Fiction",
+    "host": "Joseph Fink and Jeffrey Cranor",
+    "site": "https://www.welcometonightvale.com/",
+    "blurb": "Community-radio dispatches from a desert town where the strange is routine."
+  }
+]
