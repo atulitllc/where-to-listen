@@ -52,8 +52,21 @@ TOP_LISTEN = [
     "Fresh Air",
     "The Bill Simmons Podcast",
 ]
-SHELF_CATS = ["True crime", "Comedy", "News", "Sports"]
+SHELF_CATS = ["True crime", "Comedy", "News", "Sports", "Narrative"]
 SHELF_LIMIT = 8
+# Narrative was the thin shelf. Keep the home row on shows people already know.
+SHELF_FIRST = {
+    "Narrative": [
+        "This American Life",
+        "The Moth",
+        "S-Town",
+        "Invisibilia",
+        "Ear Hustle",
+        "The Retrievals",
+        "Modern Love",
+        "Love and Radio",
+    ],
+}
 # Readable slugs for titles whose old slugs were leftovers (show, show-3, lin, 101).
 # Every other slug already in the catalog stays frozen.
 REPLACED_SLUGS = {
@@ -371,8 +384,29 @@ def good_blurb(text):
 
 
 def sentences(text):
-    parts = re.split(r"(?<=[.!?。！？])\s+", text or "")
-    return [part.strip() for part in parts if part.strip()]
+    # Keep "Dr. Death" and "U.S. history" from splitting into a scrap plus a leftover.
+    shielded = text or ""
+    shielded = re.sub(
+        r"\b(?:Dr|Mr|Mrs|Ms|St|Jr|Sr|vs|Inc|Co|Prof|Gen|Sgt|Rev)\.",
+        lambda match: match.group(0).replace(".", "\u0001"),
+        shielded,
+    )
+    shielded = shielded.replace("U.S.S.", "U\u0001S\u0001S\u0001")
+    shielded = shielded.replace("U.S.", "U\u0001S\u0001").replace("U.K.", "U\u0001K\u0001")
+    # H.P. Lovecraft, N.O.R.E., B.J. — keep the letters together.
+    shielded = re.sub(
+        r"\b(?:[A-Z]\.){2,}",
+        lambda match: match.group(0).replace(".", "\u0001"),
+        shielded,
+    )
+    # John B. McLemore, Stephen A. Smith — a single middle initial.
+    shielded = re.sub(
+        r"\b([A-Z])\.(?=\s+[A-Z])",
+        lambda match: match.group(1) + "\u0001",
+        shielded,
+    )
+    parts = re.split(r"(?<=[.!?。！？])\s+", shielded)
+    return [part.replace("\u0001", ".").strip() for part in parts if part.strip()]
 
 
 def clip_sentence(text, limit=170):
@@ -478,11 +512,36 @@ def bare_sentence(sentence, show):
 
 
 def pack_paragraphs(kept):
+    """Turn real sentences into as many as five paragraphs. Do not invent filler."""
     if not kept:
         return []
     if len(kept) <= 2:
         return [" ".join(kept)]
-    return [" ".join(kept[:2]), " ".join(kept[2:6])]
+    paragraphs = []
+    index = 0
+    while index < len(kept) and len(paragraphs) < 5:
+        paragraphs.append(" ".join(kept[index:index + 2]))
+        index += 2
+    return paragraphs
+
+
+def essay_paragraphs(show):
+    """Hand-written detail copy, already split into paragraphs."""
+    raw = show.get("essay") or []
+    if isinstance(raw, str):
+        raw = [part.strip() for part in re.split(r"\n\s*\n", raw) if part.strip()]
+    paragraphs = []
+    for part in raw:
+        kept = []
+        for sentence in sentences(part):
+            cleaned = trim_sentence(sentence)
+            if cleaned:
+                kept.append(cleaned)
+        if kept:
+            paragraphs.append(" ".join(kept))
+    if len(paragraphs) < 3:
+        return []
+    return paragraphs[:5]
 
 
 def apply_copy(show, kept):
@@ -506,16 +565,38 @@ def apply_copy(show, kept):
 
 
 def finalize_descriptions(shows):
-    prepared = {id(show): candidate_sentences(show) for show in shows}
+    essays = {id(show): essay_paragraphs(show) for show in shows}
+    packed = {id(show): candidate_sentences(show) for show in shows}
     counts = Counter()
     for show in shows:
-        for sentence in prepared[id(show)]:
+        if essays[id(show)]:
+            flat = []
+            for paragraph in essays[id(show)]:
+                flat.extend(sentences(paragraph))
+        else:
+            flat = packed[id(show)]
+        for sentence in flat:
             key = bare_sentence(sentence, show)
             if len(key) >= 24:
                 counts[key] += 1
     for show in shows:
+        essay = essays[id(show)]
+        if essay:
+            kept_paragraphs = []
+            for paragraph in essay:
+                kept = []
+                for sentence in sentences(paragraph):
+                    key = bare_sentence(sentence, show)
+                    if len(key) >= 24 and counts[key] > 1:
+                        continue
+                    kept.append(sentence)
+                if kept:
+                    kept_paragraphs.append(" ".join(kept))
+            if len(kept_paragraphs) >= 3:
+                apply_paragraphs(show, kept_paragraphs[:5])
+                continue
         kept = []
-        for sentence in prepared[id(show)]:
+        for sentence in packed[id(show)]:
             key = bare_sentence(sentence, show)
             if len(key) >= 24 and counts[key] > 1:
                 continue
@@ -523,6 +604,19 @@ def finalize_descriptions(shows):
                 continue
             kept.append(sentence)
         apply_copy(show, kept)
+
+
+def apply_paragraphs(show, paragraphs):
+    show["paragraphs"] = paragraphs
+    show["description"] = "\n\n".join(paragraphs)
+    first = sentences(paragraphs[0])
+    sentence = first[0] if first else paragraphs[0]
+    sentence = clip_sentence(sentence, 180)
+    if sentence and not sentence.endswith((".", "!", "?", "。", "！", "？")):
+        sentence += "."
+    show["sentence"] = scrub_banned(sentence)
+    if not show.get("handwritten"):
+        show["blurb"] = show["sentence"]
 
 
 def fmt_date(iso):
@@ -675,6 +769,10 @@ def json_ld(show):
 
 def load():
     rows = json.loads((ROOT / "data/catalog.json").read_text())
+    essays = {}
+    essay_path = ROOT / "data/essays.json"
+    if essay_path.exists():
+        essays = json.loads(essay_path.read_text())
     copies = {}
     copy_path = ROOT / "data/feed_copy.json"
     if copy_path.exists():
@@ -693,6 +791,9 @@ def load():
         show["publisher"] = publisher or show.get("host") or "The publisher"
         summary = copy.get("summary") or ""
         show["sourceSummary"] = summary
+        essay = essays.get(show.get("slug") or "")
+        if essay:
+            show["essay"] = essay
         site = show.get("site") or ""
         if not usable_site(site, show.get("feed") or ""):
             site = usable_site(copy.get("link") or "", show.get("feed") or "")
@@ -763,7 +864,17 @@ def write_pages(shows):
         pool = [show for show in shows if show["category"] == category and show["slug"] not in used]
         preferred = [show for show in pool if show.get("handwritten") or show["title"] in HAND]
         rest = [show for show in pool if show not in preferred]
-        return (preferred + rest)[:SHELF_LIMIT]
+        ordered = preferred + rest
+        first = []
+        by_title = {show["title"]: show for show in pool}
+        for name in SHELF_FIRST.get(category, []):
+            show = by_title.get(name)
+            if show and show not in first:
+                first.append(show)
+        for show in ordered:
+            if show not in first:
+                first.append(show)
+        return first[:SHELF_LIMIT]
 
     shelves = [shelf_block("Top Listen", [card_html(show, f"podcasts/{show['slug']}/") for show in top])]
     for cat in SHELF_CATS:
@@ -790,17 +901,11 @@ def write_pages(shows):
         <input id="q" type="search" placeholder="Search the full catalog" autocomplete="off">
         <span id="count">{len(shows)}</span>
       </label>
+      <nav class="cat-index" aria-label="Categories">{''.join(cat_links)}</nav>
     </div>
   </section>
   <div class="wrap" id="shelves">
     {''.join(shelves)}
-    <section class="shelf">
-      <div class="shelf-head">
-        <h2>All categories</h2>
-        <span class="meta-row">Catalog checked {FETCHED} ET</span>
-      </div>
-      <nav class="cat-index" aria-label="Categories">{''.join(cat_links)}</nav>
-    </section>
   </div>
   <section class="wrap results-wrap">
     <div class="grid" id="results" hidden></div>
@@ -825,7 +930,7 @@ def write_pages(shows):
     <p>No episode audio, no embedded players, no copied MP3s, and no pirate mirrors. There is nothing for sale. Each show page links out to the publisher’s own website and to that show’s public RSS feed, labeled as external.</p>
     <p>The line called “last episode listed in the official feed” is a title and a date read from the publisher’s RSS. It is not a file, and it is not a promise that the feed still looks the same tomorrow.</p>
     <h2>Where the facts come from</h2>
-    <p>On {FETCHED} the shelf was filled from publisher RSS feeds. Public podcast charts were used only to find those feed addresses, then discarded. Each page keeps the show title, the feed URL, the artwork address already published in that feed, a description written for this catalog, and the title of the latest episode. The Podcast Index API was not called. No Podcast Index response is stored here, and show pages do not carry a Podcast Index credit.</p>
+    <p>On {FETCHED} the shelf was filled from publisher RSS feeds. Public podcast charts were used only to find those feed addresses, then discarded. Narrative series added on Oct 4, 2026 were checked the same way, from each publisher’s own feed. Each page keeps the show title, the feed URL, the artwork address already published in that feed, a description written for this catalog, and the title of the latest episode. The Podcast Index API was not called. No Podcast Index response is stored here, and show pages do not carry a Podcast Index credit.</p>
     <p>Artwork is hotlinked from that feed address. The image bytes are not copied into this site. If a publisher would rather not be hotlinked, the picture should be removed and the monogram left in its place. Feeds are linked so you can subscribe in your own app.</p>
     <h2>A note on Podcast Index</h2>
     <p>Podcast Index (<a href="https://podcastindex.org/" target="_blank" rel="noopener noreferrer">podcastindex.org</a>) is an open podcast directory with a developer API. Their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark.</p>
@@ -1070,11 +1175,12 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 - Outbound links are the official site and the official RSS only. Enclosure URLs were discarded and are not in the HTML.
 - Slugs already in the catalog stay frozen. Titles that had collapsed to `show`, `show-N`, `lin`, or `101` use a readable slug derived from the show name.
 - For Behind the Bastards, the newest item in the iHeart feed was a sibling show (“It Could Happen Here”). The page uses the newest item that is actually a Behind the Bastards episode.
-- Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top.
+- Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top. Checked again on Oct 4, 2026: that feed was still another Slate show.
+- On Oct 4, 2026, 78 narrative series were added from each publisher’s own RSS. New show pages use a multi-paragraph catalog essay. Flagship pages that were still a sentence or two use the same kind of essay. Other pages use sentences already in the publisher summary, packed into as many as five paragraphs when the summary is long enough.
 
 ## Design
 
-Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. A waveform sits in the wordmark, which stays “Where to Listen”. The home page is a short hero plus a few shelves (Top Listen and popular categories). Each category page lists every show in that category. No custom domain is configured.
+Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. A waveform sits in the wordmark, which reads findthispodcast. The home page is a short hero plus a few shelves (Top Listen and popular categories). Category links sit under the search box. Each category page lists every show in that category. No custom domain is configured.
 
 ## Theme toggle
 
@@ -1161,6 +1267,18 @@ def visible_text(page):
     return text
 
 
+WORDMARK = '<strong>findthis<span class="accent">podcast</span></strong>'
+
+
+def domain_pointer(text):
+    low = (text or "").lower()
+    if "findthispodcast.com" in low or "findthispodcast.org" in low:
+        return True
+    if re.search(r'href="https?://[^"]*findthispodcast', low):
+        return True
+    return False
+
+
 def audit(shows):
     problems = []
     pages = [ROOT / "index.html", ROOT / "about.html", ROOT / "about" / "index.html", ROOT / "404.html"]
@@ -1191,7 +1309,7 @@ def audit(shows):
         problems.append(f"home dumps catalog ({home_cards} cards)")
     if "Top Listen" not in home or home.count("See all") < 4:
         problems.append("home shelves")
-    if '<strong>Where to <span class="accent">Listen</span></strong>' not in home or "findthispodcast" in home.lower():
+    if WORDMARK not in home or domain_pointer(home):
         problems.append("wordmark")
     css = (ROOT / "css/site.css").read_text()
     if "clamp(3.1rem, 8vw, 6.2rem)" in css:
@@ -1241,7 +1359,7 @@ def audit(shows):
             problems.append(f"title dot {show['slug']}")
         if show["slug"] not in slugs:
             problems.append(f"slug {show['slug']}")
-        if "findthispodcast" in page.lower():
+        if domain_pointer(page):
             problems.append(f"domain {show['slug']}")
         check_anchors(page, show["slug"], problems)
     dale = next((show for show in shows if show["title"] == "The Dale Jr. Download"), None)
@@ -1252,7 +1370,7 @@ def audit(shows):
         problems.append("about/ missing noindex or canonical")
     if 'href="../css/site.css"' not in about_page:
         problems.append("about/ asset path")
-    if "findthispodcast" in about_page.lower():
+    if domain_pointer(about_page) or WORDMARK not in about_page:
         problems.append("domain about")
     check_anchors(about_page, "about", problems)
     for cat in ordered_categories(shows):
@@ -1269,7 +1387,7 @@ def audit(shows):
             problems.append(f"category head {cat}")
         if 'href="../../css/site.css"' not in page:
             problems.append(f"category css {cat}")
-        if "findthispodcast" in page.lower():
+        if domain_pointer(page) or WORDMARK not in page:
             problems.append(f"domain {cat}")
         check_anchors(page, f"category {cat}", problems)
     skeletons = Counter()
@@ -1287,7 +1405,7 @@ def audit(shows):
         page = (ROOT / name).read_text()
         if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
             problems.append(f"public head {name}")
-        if "atulit" in page.lower() or "findthispodcast" in page.lower():
+        if "atulit" in page.lower() or domain_pointer(page) or WORDMARK not in page:
             problems.append(f"brand {name}")
         check_anchors(page, name, problems)
         visible = visible_text(page)

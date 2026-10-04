@@ -1,0 +1,1047 @@
+"""Hand-written detail copy for the narrative pass and thin flagship pages.
+
+Paragraphs are catalog prose. They are not feed dumps and not a shared template.
+"""
+
+# Keyed by the lookup name used when the feed was found.
+NEW = {
+    "The Moth": {
+        "host": "The Moth",
+        "paragraphs": [
+            "The Moth is a live storytelling series: people stand on a stage without notes and tell something that actually happened to them.",
+            "A theme is announced in advance, the stories are timed, and the room reacts in real time. What lands in the feed is the night itself, lightly shaped, not a studio interview cut down to quotes.",
+            "The series became a reference point for personal narrative in audio because it trusts a single voice in front of strangers. Humor and humiliation sit next to grief without a host stepping in to explain the moral.",
+            "Start with a theme episode whose title sounds slightly uncomfortable. The best stories turn in the last minute, and the audience noise is part of the point.",
+        ],
+    },
+    "Invisibilia": {
+        "host": "Alix Spiegel and Hanna Rosin",
+        "paragraphs": [
+            "Invisibilia, from NPR, treats invisible forces as reportable: a thought pattern, a social script, a scientific claim about how minds work.",
+            "Alix Spiegel and Hanna Rosin built it as narrative journalism rather than a tip show. Later seasons kept that shape even as the hosting chair moved around the reporting team.",
+            "An episode will follow one person until a research idea has somewhere to stand. The science is there to complicate the story, not to hand out a life hack at the end.",
+            "Seasons are short and uneven on purpose. If a premise sounds too tidy in the opening minute, wait for the interview that knocks it sideways.",
+        ],
+    },
+    "S-Town": {
+        "host": "Brian Reed",
+        "paragraphs": [
+            "S-Town is Brian Reed’s seven-chapter portrait of John B. McLemore and a town in Alabama that John insisted was rotten.",
+            "It begins as a requested investigation and becomes a study of friendship, clocks, class, and what a person does with a furious mind. Serial Productions released the whole story at once.",
+            "The series is often the show people mean when they say a podcast can be a novel. Reed stays in the tape after the original assignment falls apart, which is the actual plot.",
+            "Listen in order. Later chapters reframe earlier jokes, and skipping ahead turns a character study into a pile of anecdotes.",
+        ],
+    },
+    "Love and Radio": {
+        "host": "Nick van der Kolk",
+        "paragraphs": [
+            "Love and Radio, made by Nick van der Kolk, is built from interviews with people who are easy to flatten and hard to forget.",
+            "The edit is musical: long pauses, sudden music, a question left hanging. Subjects have included con artists, believers, and people living with decisions the host does not tidy up.",
+            "The show matters because it refuses the usual rescue arc. You are left inside someone else’s reasoning long enough to feel how it works from in there.",
+            "Use headphones. The mixes are part of the argument, and a phone speaker turns the silences into dead air.",
+        ],
+    },
+    "The Heart": {
+        "host": "Kaitlin Prest",
+        "paragraphs": [
+            "The Heart, led by Kaitlin Prest, is an intimate documentary series about desire, power, and the stories people tell themselves in bed and afterward.",
+            "Episodes are scored and performed more like short films than chats. Producers put their own lives in the tape, then interrogate the edit.",
+            "It pushed audio toward explicit, first-person documentary at a time when most relationship shows were advice. The craft is the point: breath, room tone, and a narrator who does not pretend to be neutral.",
+            "Some episodes are sexually frank and emotionally abrupt. They are short. One at a time is plenty.",
+        ],
+    },
+    "The Mortified Podcast": {
+        "host": "Dave Nadelberg",
+        "paragraphs": [
+            "Mortified puts adults on stage to read the diaries, letters, and lyrics they wrote as teenagers, with Dave Nadelberg shaping the nights.",
+            "The joke is the voice on the page. The turn is the person now, standing next to that voice and refusing to sand it down into a lesson about growth.",
+            "The series works because embarrassment is specific. A song about a crush in 1996 carries more social history than a panel about nostalgia.",
+            "The live episodes have crowd noise and long setups. The diary pages are where the show actually starts.",
+        ],
+    },
+    "StoryCorps": {
+        "host": "Dave Isay",
+        "paragraphs": [
+            "StoryCorps, founded by Dave Isay, records ordinary conversations: two people who already know each other, in a booth, with time.",
+            "The public episodes are cuts from those sessions. A mother and son, old friends, a stranger who is not a stranger by the end. The questions are simple and the answers run long.",
+            "The archive is the project. The feed is a doorway into a collection built so families would have their own voices on file, not so a host could perform empathy.",
+            "The pieces are short. Play one when you want a single scene, not a season-long mystery.",
+        ],
+    },
+    "Radio Diaries": {
+        "host": "Joe Richman",
+        "paragraphs": [
+            "Radio Diaries, produced by Joe Richman, hands people recorders and waits. Teenagers, workers, patients, and witnesses narrate their own weeks.",
+            "The method is old public-radio craft: cut the diary down until a life has a shape, and leave the mess that makes it believable.",
+            "The historical hours, built from tapes people already had, sit alongside the diaries. Both ask the same thing of the listener, which is patience with a voice that was not trained for a microphone.",
+            "If an episode is labeled as a diary, expect pauses and rooms. The polish is in the structure, not in a studio voiceover smoothing every edge.",
+        ],
+    },
+    "the memory palace": {
+        "host": "Nate DiMeo",
+        "paragraphs": [
+            "The Memory Palace is Nate DiMeo telling one historical scene at a time, scored, and usually over in less than twenty minutes.",
+            "He writes in the second person often enough that you are dropped into a street, a fairground, or a courtroom before the context arrives. The facts are researched. The feeling is composed.",
+            "It is a master class in short narrative because nothing is wasted. A name, a date, and an image do the work a three-part investigation would stretch across ads.",
+            "Do not binge it like news. The pieces are dense, and the music is doing half the storytelling.",
+        ],
+    },
+    "Everything is Alive": {
+        "host": "Ian Chillag",
+        "paragraphs": [
+            "Everything is Alive, hosted by Ian Chillag, interviews inanimate objects as if they could talk, and then lets a performer answer in character.",
+            "A can of cola, a pillow, a bar of soap. The joke is the premise. The episode becomes a sideways documentary about labor, waste, design, or loneliness.",
+            "Radiotopia put it out because the bit is sturdy enough to carry real reporting. Writers and actors build the voice, and Chillag interviews it the way he would interview a person with a job.",
+            "Start with whatever object you already have strong feelings about. The show is funniest when the object is defensive about its own purpose.",
+        ],
+    },
+    "The Allusionist": {
+        "host": "Helen Zaltzman",
+        "paragraphs": [
+            "The Allusionist is Helen Zaltzman’s show about language as a trail of arguments: who named something, who was left out of the dictionary, which joke is doing legal work.",
+            "Episodes are tightly written. A linguist, a historian, or a person living inside a word gets the microphone, and Zaltzman keeps the through-line short enough to finish on a walk.",
+            "It belongs with narrative shows because a word’s history is told as a story, not as a list of roots. You come for a curiosity and leave with a fight that happened in 1740.",
+            "The episodes are independent. Pick one whose title is a single word you thought you understood.",
+        ],
+    },
+    "UnFictional": {
+        "host": "KCRW",
+        "paragraphs": [
+            "UnFictional is KCRW’s home for documentary stories that do not fit a news slot: odd lives, long obsessions, and scenes that need music more than a headline.",
+            "Producers rotate. The constant is the form, a shaped story with a beginning and a turn, closer to a short film than to a chat about the week’s culture.",
+            "Los Angeles public radio has used the strand to keep narrative work on the air between the bigger seasonal investigations. Some of the strongest hours are about people who would never book themselves on a talk show.",
+            "Read the episode title before you commit. The range runs from playful to bleak, and the feed does not warn you which one you pressed.",
+        ],
+    },
+    "Here Be Monsters": {
+        "host": "Jeff Emtman",
+        "paragraphs": [
+            "Here Be Monsters, made by Jeff Emtman, looks for the places a rational person still feels superstition: a sound in the woods, a family story, a scientific edge.",
+            "The reporting is curious rather than gothic. Emtman will chase a legend and also sit with the person who has to live next to it on a Tuesday.",
+            "The show earned its following by treating wonder as a reporting problem. You get tape from the site, not a host reciting a Wikipedia plot in a spooky voice.",
+            "Night listening suits it. The mixes are quiet, and a bright room makes the hesitations seem slower than they are.",
+        ],
+    },
+    "Beautiful Stories From Anonymous People": {
+        "host": "Chris Gethard",
+        "paragraphs": [
+            "Beautiful Stories From Anonymous People is one phone call. Chris Gethard answers, the caller stays nameless, and they talk until the hour runs out.",
+            "There is no guest booking and no second take. The show is whatever the person on the line is willing to say to a stranger who is funny and also willing to be quiet.",
+            "It became a portrait series by accident. Over the years the calls have held confessions, pranks, grief, and people who just wanted to hear a voice. Gethard’s skill is not steering them toward a brand of vulnerability.",
+            "You cannot pick the topic in advance. That is the format. If the first five minutes are awkward, that is also the format.",
+        ],
+    },
+    "Dear Sugars": {
+        "host": "Cheryl Strayed and Steve Almond",
+        "paragraphs": [
+            "Dear Sugars was Cheryl Strayed and Steve Almond answering letters about the problems people are embarrassed to say out loud.",
+            "They recorded in a studio conversation, then let the letter set the stakes. Strayed writes like a novelist. Almond argues like a critic who has been in the room. Neither of them pretends a letter has one clean reply.",
+            "The show mattered because advice audio is usually a performance of certainty. This one left the contradiction in. A listener could hear two smart people disagree and still feel accompanied.",
+            "The episodes are topical rather than serial. Choose a letter whose dilemma you recognize, and ignore the urge to treat their answer as a rule.",
+        ],
+    },
+    "Death, Sex & Money": {
+        "host": "Anna Sale",
+        "paragraphs": [
+            "Death, Sex and Money is Anna Sale’s interview show about the three subjects people schedule their personalities around avoiding.",
+            "Guests are sometimes famous and often not. The useful episodes are the ones where a person explains a decision about care, cash, or desire with the specifics still attached.",
+            "Sale’s style is direct without being cruel. She asks the money question and the body question and then waits, which is why the series outlasted the trend of confessional branding.",
+            "It moved among public-radio homes and kept the same spine. You can start anywhere. The title of the episode is an honest table of contents.",
+        ],
+    },
+    "Modern Love": {
+        "host": "The New York Times",
+        "paragraphs": [
+            "Modern Love is the Times essay column performed as audio: one relationship, told by the person who lived it, often with an actor reading and the writer nearby.",
+            "Daniel Jones built the column on a simple constraint, a true story that has to earn its ending. The podcast keeps that constraint and adds a voice, which changes where the jokes land.",
+            "The series is a weekly reminder that a love story can be about a neighbor, a parent, or a decision not to call. Fame is incidental. The sentence-level writing is the draw.",
+            "Episodes stand alone. If a reading feels too smooth, stay for the conversation after, where the writer admits what the essay left out.",
+        ],
+    },
+    "Thanks For Asking": {
+        "host": "Nora McInerny",
+        "paragraphs": [
+            "Thanks For Asking is Nora McInerny’s call-in hour about how people are actually doing, which is a continuation of the show listeners knew as Terrible, Thanks for Asking.",
+            "Callers talk about grief, illness, stuck marriages, and the odd mercy of a boring day. McInerny has been through enough loss to skip the soft landing, and she is funny in the same breath.",
+            "The rename did not turn it into a wellness brand. It is still a phone show: one person, a specific trouble, and a host who will not translate it into a slogan.",
+            "The episodes are emotionally heavy and often short on plot. That is not a flaw. Come for the conversation, not for a mystery.",
+        ],
+    },
+    "The Kitchen Sisters Present": {
+        "host": "Davia Nelson and Nikki Silva",
+        "paragraphs": [
+            "The Kitchen Sisters, Davia Nelson and Nikki Silva, make documentary collages: many voices, archival tape, and a story that belongs to a place as much as to a person.",
+            "Their present-tense feed gathers pieces on hidden kitchens, lost recordings, and the people who keep a tradition alive when the institution has moved on.",
+            "They are the reason a certain kind of American audio sounds like a chorus instead of a host. You hear a door, a stove, a meeting, and only then the argument.",
+            "Give an episode the full length. The opening can feel like atmosphere until the fifth voice tells you what the hour is actually about.",
+        ],
+    },
+    "Ear Hustle": {
+        "host": "Earlonne Woods and Nigel Poor",
+        "paragraphs": [
+            "Ear Hustle is made inside California prisons and outside them, co-founded by Earlonne Woods and Nigel Poor, with Rahsaan Thomas and others in the chairs as the show grew.",
+            "Stories come from incarcerated people and from life after release: a pet, a recipe, a parole hearing, a friendship that has rules the outside does not understand.",
+            "It changed what prison audio could be by refusing both the lecture and the shock. The producers are in the population or were, and the jokes are allowed to be ordinary.",
+            "Start with a small-subject episode before a heavy one. The show’s ear for daily life is the part that does not travel in clips.",
+        ],
+    },
+    "This is Love": {
+        "host": "Phoebe Judge",
+        "paragraphs": [
+            "This is Love is Phoebe Judge’s companion to Criminal: reported stories in which the plot is attachment, not a case file.",
+            "A person, an animal, a place, a vow. Judge’s narration is calm, and the interviews are allowed to stay strange. The team’s reporting habits are the same as on the crime show, aimed at a different question.",
+            "Listeners who wanted Criminal without a body found a second catalog here. The best hours are not romantic in the poster sense. They are about what someone kept choosing.",
+            "Episodes are independent and usually one sitting. The title rarely tells you the species of the beloved, which is part of the pleasure.",
+        ],
+    },
+    "Making Gay History | LGBTQ Oral Histories from the Archive": {
+        "host": "Eric Marcus",
+        "paragraphs": [
+            "Making Gay History is Eric Marcus opening his archive of interviews with LGBTQ people who were in the room when the movement was still a set of private risks.",
+            "You hear the original tape, then Marcus explaining who is speaking and what had not yet been named. Activists, artists, and people who never wanted a platform share the feed.",
+            "The series is a primary source that happens to be edited like a story. A chuckle in 1989 does more work than a montage of news clips.",
+            "The episodes are short and densely peopled. Keep a finger on the pause button if you want to hear a name twice.",
+        ],
+    },
+    "The Anthropocene Reviewed": {
+        "host": "John Green",
+        "paragraphs": [
+            "The Anthropocene Reviewed is John Green reviewing facets of the human-built world on a five-point scale, from the plague to Diet Dr Pepper to a particular sunset.",
+            "Each essay is personal, researched, and scored. The number is a joke that becomes a way to hold a feeling still. Green wrote them through illness and through the early pandemic, and the voice knows it.",
+            "The show is a rare essay series that people finished and then reread in print. Audio is the better version if you want the timing of his hesitations.",
+            "The feed is a completed book in episodes. Listen in any order, but the later ones talk back to the earlier scores.",
+        ],
+    },
+    "Dead Eyes": {
+        "host": "Connor Ratliff",
+        "paragraphs": [
+            "Dead Eyes is Connor Ratliff’s long investigation of a small humiliation: Tom Hanks fired him from a Band of Brothers role because of his eyes, or so the story went.",
+            "Ratliff interviews actors, directors, and friends, and he performs his own spiral with enough jokes that the vanity stays visible. The question is petty. The tape about work and luck is not.",
+            "The series became a cult because it refused to resolve on schedule. A grudge is a structure. Ratliff keeps checking whether he still wants the ending he planned.",
+            "It is a serial. Early episodes are the premise. Later ones are about what the premise did to the host, which is the better half.",
+        ],
+    },
+    "Benjamen Walker's Theory of Everything": {
+        "host": "Benjamen Walker",
+        "paragraphs": [
+            "Theory of Everything is Benjamen Walker’s essay documentary about technology, politics, and the stories companies tell when they want a future to sound inevitable.",
+            "He mixes reporting, archival audio, and a narrator who is allowed to be wrong in public. Episodes wander into urban planning, surveillance, and the mood of a particular year.",
+            "Walker’s show is a bridge between public-radio features and a more paranoid, comic kind of criticism. You can hear him thinking while the tape is still rolling.",
+            "Seasons have moods. If one episode feels like a lecture, the next may be a city walk. Stay with a season rather than shuffling single titles.",
+        ],
+    },
+    "Short Cuts": {
+        "host": "Josie Long",
+        "paragraphs": [
+            "Short Cuts, from BBC Radio 4 and hosted by Josie Long, is a packet of brief documentaries: a few producers, a few ideas, one sitting.",
+            "The pieces are made by a rotating cast of audio makers. Long introduces them with the enthusiasm of someone who has already laughed at the cut in the edit suite.",
+            "The strand is where a lot of British narrative radio stays short on purpose. A five-minute documentary can hold a whole character if the producer trusts the tape.",
+            "You can treat an episode as a magazine. If one piece misses, the next one starts clean.",
+        ],
+    },
+    "Rough Translation": {
+        "host": "Gregory Warner",
+        "paragraphs": [
+            "Rough Translation, hosted by Gregory Warner at NPR, follows a familiar argument into another country and asks how it sounds there.",
+            "Parenting advice, protest tactics, a viral idea about work. The reporting stays with people who have to use the idea, not with a panel scoring it from a studio.",
+            "The show is narrative foreign correspondence for listeners who do not think of themselves as news consumers. A concept you thought was American turns out to have a cousin, and a cost, somewhere else.",
+            "Episodes are self-contained. The strongest ones start with a small domestic scene and only later name the big word.",
+        ],
+    },
+    "More Perfect": {
+        "host": "Jad Abumrad",
+        "paragraphs": [
+            "More Perfect is Jad Abumrad and the Radiolab circle telling stories about the Supreme Court as if the cases were human plots, which they are.",
+            "A decision becomes a set of people: clerks, plaintiffs, justices with habits. The production is as designed as Radiolab, with music doing explanatory work.",
+            "The series made constitutional law feel like narrative audio without turning it into a civics worksheet. You remember the person who brought the case, and then you understand the footnote.",
+            "Some episodes assume you know the name of a case. If you do not, the opening scene still works. The holding arrives after you care.",
+        ],
+    },
+    "Scene on Radio": {
+        "host": "John Biewen",
+        "paragraphs": [
+            "Scene on Radio, from John Biewen and the Kenan Institute for Ethics, builds seasons that are actually arguments: Seeing White, Men, The Land That Never Has Been Yet.",
+            "Each season is a course told in scenes. Historians and people living the consequence share the episodes, and Biewen keeps himself in the frame as a student with a microphone.",
+            "The show is slower than a news podcast and more pointed than a general-interest magazine. Listeners came for one season and found a method: history told so the present cannot pretend it started yesterday.",
+            "Do a season in order. A later episode will cite an earlier interview the way a chapter cites a scene.",
+        ],
+    },
+    "White Lies": {
+        "host": "Chip Brantley and Andrew Beck Grace",
+        "paragraphs": [
+            "White Lies is Chip Brantley and Andrew Beck Grace investigating the 1965 murder of the Rev. James Reeb in Selma, and the stories a town told instead.",
+            "The reporting is patient and local. People who were there contradict the file, and the hosts let the contradiction stand until the tape earns a conclusion.",
+            "NPR carried it as a model of cold-case narrative that is really about memory and power. The question is not only who struck the blows. It is who was allowed to forget.",
+            "It is a serial. The early episodes teach you the map. Leaving after the most dramatic interview misses the part about the lie in the title.",
+        ],
+    },
+    "Nice White Parents": {
+        "host": "Chana Joffe-Walt",
+        "paragraphs": [
+            "Nice White Parents is Chana Joffe-Walt’s Serial Productions series about a public school in Brooklyn and the white families who arrive believing they are there to help.",
+            "Five parts follow money, meetings, and the history under a building. The title is the argument. The reporting is specific enough that the argument has names.",
+            "The series is one of the clearest examples of education reporting as narrative. Policy shows up as a vote in a gym, not as a white paper.",
+            "Listen straight through. Each part answers a courtesy the previous part extended, and the courtesies get thinner.",
+        ],
+    },
+    "The Trojan Horse Affair": {
+        "host": "Brian Reed and Hamza Syed",
+        "paragraphs": [
+            "The Trojan Horse Affair follows a mysterious letter that accused Birmingham schools of an Islamist plot, and the political storm that treated the letter as fact.",
+            "Brian Reed and Hamza Syed report it as a serial, with Syed’s stake in the city left in the narration. They chase who wrote the letter and what officials did once the story was too useful to check.",
+            "The series is uncomfortable on purpose. A host is implicated in the telling, and the show does not tidy that into a brand of neutrality. The plot is a document and the uses people found for it.",
+            "It is long and argumentative. The letter itself is simple. The institutions around it are not. Stay past the setup.",
+        ],
+    },
+    "The Retrievals": {
+        "host": "Susan Burton",
+        "paragraphs": [
+            "The Retrievals, reported by Susan Burton for Serial Productions and the Times, begins with women at a Yale fertility clinic who said their pain was ignored during egg retrievals.",
+            "Season one is a crime against patients told through their own timelines. Season two turns to pain during C-sections, a surgery so common that the suffering had been filed under normal.",
+            "Burton’s method is to let procedure become plot. A form, a dose, a nurse’s habit: those are the scenes. The series is narrative medical reporting without the voice of a thriller.",
+            "Season one can be heard alone. Season two assumes you can sit with clinical detail. Neither season is a metaphor. They are about what happened in the room.",
+        ],
+    },
+    "The Kids of Rutherford County": {
+        "host": "Meribah Knight",
+        "paragraphs": [
+            "The Kids of Rutherford County, from Meribah Knight with Serial Productions, is about children in Tennessee jailed for charges that should not have put them in a cell.",
+            "A judge’s policy, a video, a lawyer who starts pulling files. The story is local and then it is about how a system treats Black children when nobody powerful is counting.",
+            "Knight had already reported Nashville schools. Here the narrative is a docket. The outrage is in the paperwork, which makes it harder to wave away as tone.",
+            "Four episodes, in order. The video in the first chapter is the key, and later episodes show what the county did after people heard it.",
+        ],
+    },
+    "We Were Three": {
+        "host": "Serial Productions",
+        "paragraphs": [
+            "We Were Three is a Serial Productions series about three brothers and a recording that outlives one of them.",
+            "The story moves through illness, family roles, and the way a household sounds when people are trying to be brave on tape. It is short, and it does not behave like a whodunit.",
+            "The series shows what the Serial shop does when the plot is grief rather than an investigation. Scenes are domestic. The stakes are still total.",
+            "Hear it as a single piece. The black-box recording only means what it means after you know the voices.",
+        ],
+    },
+    "The Other Latif": {
+        "host": "Latif Nasser",
+        "paragraphs": [
+            "The Other Latif is Radiolab’s Latif Nasser trying to find out why a man who shares his name is detained at Guantanamo.",
+            "The search is personal and then procedural: files, lawyers, a camp that does not want to be a story. Nasser’s curiosity is the engine, and he keeps checking it for vanity.",
+            "The series is a narrative about identity that refuses to stay metaphorical. Two men, one name, and a legal system that can hold a person out of view for years.",
+            "It is a serial with a host who learns in public. The early jokes about the name are the door, not the subject.",
+        ],
+    },
+    "The Improvement Association": {
+        "host": "Zoe Chace",
+        "paragraphs": [
+            "The Improvement Association is Zoe Chace’s Serial series about election accusations in Bladen County, North Carolina, and the Black political group that lives under them.",
+            "People in town describe a machine. Chace asks who benefits from that description, and what the ballots actually show. The reporting sits in living rooms more than in hearing rooms.",
+            "The show is narrative political reporting that does not start in Washington. A local grudge, repeated often enough, becomes a national story about fraud.",
+            "Listen in order. The first chapter’s nickname for a local figure is a clue to how the county talks, and later chapters spend that clue carefully.",
+        ],
+    },
+    "Floodlines": {
+        "host": "Vann R. Newkirk II",
+        "paragraphs": [
+            "Floodlines is Vann R. Newkirk II’s history of Hurricane Katrina as it was lived in New Orleans, not as a montage of rooftops.",
+            "The Atlantic series uses interviews and archival audio to follow the days when the water rose and the years when the story about those days hardened.",
+            "Newkirk is from the Gulf. The narration knows which details outsiders treat as color. The series is about a flood, a federal failure, and the argument over what to call either one.",
+            "Eight parts, chronological. The rebirth language arrives late, and it sounds different once you have heard the week itself.",
+        ],
+    },
+    "The Experiment": {
+        "host": "Julia Longoria",
+        "paragraphs": [
+            "The Experiment, from The Atlantic and WNYC and hosted by Julia Longoria, is a narrative strand for stories that need more than a news hit and less than a heroic season.",
+            "An episode might be a policy told through one family, or a science question told through the person who cannot leave it. The reporting is magazine work with scenes.",
+            "The feed has also been a porch for sister shows, so the archive is wider than a single host’s voice. When Longoria is driving, the shape is consistent: a question, a person, a turn.",
+            "Check the episode date and the guest line before you assume it is part of the same season. The best hours announce their subject in the first scene, not in a trailer.",
+        ],
+    },
+    "Radio Atlantic": {
+        "host": "Hanna Rosin",
+        "paragraphs": [
+            "Radio Atlantic is the magazine’s audio edition: a reported conversation or a narrative feature with the Atlantic’s writers, often with Hanna Rosin as the guide.",
+            "Some weeks are interviews. Some weeks are built pieces with tape. The range is the magazine’s range, from politics to a novelist’s moral argument.",
+            "It is the place a print story goes when it needs a voice and a follow-up question. You hear a writer defend a paragraph, or a subject complicate the piece that was written about them.",
+            "It is not a serial. Pick by topic. If you want a single narrative arc, choose an episode that says it is a story rather than a chat.",
+        ],
+    },
+    "Reveal": {
+        "host": "Al Letson",
+        "paragraphs": [
+            "Reveal, from the Center for Investigative Reporting and hosted by Al Letson, is a weekly investigative documentary: one injustice, reported until it has scenes.",
+            "The team works with partner newsrooms. Episodes move from housing to labor to policing to the environment, with Letson stitching the hour so it plays as a story rather than a brief.",
+            "The show is what national investigative radio sounds like when it still believes in tape. A spreadsheet becomes a knock on a door.",
+            "You can start at the current episode. If the subject is grim, the reporting usually tells you early what kind of hour you are in for.",
+        ],
+    },
+    "No Compromise": {
+        "host": "NPR",
+        "paragraphs": [
+            "No Compromise is NPR’s reported series on the hard edge of American gun politics, the activists who treat any regulation as a betrayal, and the media machine around them.",
+            "It won a Pulitzer Prize for audio reporting. The episodes follow specific people and posts rather than arguing in the abstract about the Second Amendment.",
+            "The narrative is about a movement’s aesthetics as much as its legislation: videos, rallies, a tone that travels faster than a bill. Reporters stay close enough to show how the absolutism recruits.",
+            "It is a short serial with a point of view that the tape has to justify. Hear it in order, including the episode that explains where the phrase in the title comes from.",
+        ],
+    },
+    "Louder Than A Riot": {
+        "host": "Rodney Carmichael and Sidney Madden",
+        "paragraphs": [
+            "Louder Than A Riot, hosted by Rodney Carmichael and Sidney Madden, looks at hip-hop as a culture that has been policed, mined, and asked to carry stories it did not audition for.",
+            "Seasons connect artists, court cases, and the business around Black music. The hosts are critics and reporters, and they let a song be evidence without pretending it is only evidence.",
+            "NPR gave them room to make a music show that is also a narrative about punishment. Queer artists and women in rap are not a sidebar.",
+            "A season hangs together. A single episode still works if you know the artist, but the argument is in the sequence.",
+        ],
+    },
+    "The Promise": {
+        "host": "Meribah Knight",
+        "paragraphs": [
+            "The Promise, from Nashville Public Radio and reporter Meribah Knight, is about what a city owes its public schools and the Black institutions around them.",
+            "The title refers to both a civic slogan and a debt. Episodes follow families, teachers, and the long story of Tennessee State, with policy arriving as a decision someone has to live with.",
+            "Knight’s reporting is local on purpose. National listeners use it as a narrative about segregation that did not end when the photos in the textbook ended.",
+            "Later seasons shift setting inside the same city. If you start with the school series, stay through the episode that explains the money.",
+        ],
+    },
+    "Making": {
+        "host": "WBEZ Chicago",
+        "paragraphs": [
+            "Making is WBEZ’s biography series: one season, one figure or one industry, reported as a rise rather than as a greatest-hits interview.",
+            "The Obama season is the one many listeners came for. Later seasons have taken the same method to other Chicago-sized subjects, including the machinery of daytime television.",
+            "The form is narrative profile with documents and rivals, not a host and a guest trading charm. You hear how a reputation was assembled.",
+            "Pick a season and play it straight. A trailer for the next subject will show up in the feed. The chapters of the season you chose are the show.",
+        ],
+    },
+    "The Habitat": {
+        "host": "Lynn Levy",
+        "paragraphs": [
+            "The Habitat, reported by Lynn Levy for Gimlet, follows six people sealed in a fake Mars on a Hawaiian volcano.",
+            "They are not astronauts on a real mission. They are a rehearsal, which turns out to be dramatically richer: chores, alliances, a window, a year of other people’s habits.",
+            "The series is a classic of small-scale documentary. The science-fiction premise falls away and you are left with a household that cannot open the door.",
+            "It is one season, complete. Listen in order. The interpersonal weather is the plot, and it changes slowly enough that skipping an episode drops a grudge.",
+        ],
+    },
+    "Mystery Show": {
+        "host": "Starlee Kine",
+        "paragraphs": [
+            "Mystery Show is Starlee Kine solving mysteries that are too small for the police and too stubborn for a search box.",
+            "A missing belt buckle, a novelty license plate, a question that has been annoying one person for years. Kine treats the errand as a detective story, with digressions that are the actual point.",
+            "Gimlet released two short seasons and then stopped. The show’s reputation comes from that scarcity and from Kine’s willingness to stay on the phone past the moment a normal interviewer would wrap.",
+            "There are only a handful of cases. Start with the first. The method is the pleasure, and the method is established by watching her get lost.",
+        ],
+    },
+    "Headlong: Missing Richard Simmons": {
+        "host": "Dan Taberski",
+        "paragraphs": [
+            "Missing Richard Simmons is Dan Taberski’s 2017 serial about the fitness star who stopped teaching, stopped calling, and left his regulars without an explanation.",
+            "Taberski is a friend of the class, not a cop. He talks to the people who were worried, the people who were angry, and the machinery of fame that thought it was owed an answer.",
+            "The series is a pivotal, uneasy narrative: intimate, sometimes pushy, and honest about how a podcast can crowd a person who chose silence. The discomfort is in the text, not an accident of tone.",
+            "It is short. Hear it as a finished argument about privacy. Later bonus messages in the feed are not new chapters of the disappearance.",
+        ],
+    },
+    "StartUp TRY": {
+        "host": "Alex Blumberg",
+        "paragraphs": [
+            "StartUp began as Alex Blumberg documenting the birth of Gimlet, including the awkward pitch meetings he would rather have cut.",
+            "Later seasons left his company and followed other founders: a dating app, a dating-app failure, people discovering that a business is a set of personal compromises with a cap table.",
+            "The first season is the one that taught a generation of listeners what a narrative business show could sound like. Blumberg is a character, and the character is often embarrassed, which is why it worked.",
+            "Season one is the serial to play straight through. Later seasons are separate stories that reuse the method.",
+        ],
+    },
+    "The Nod": {
+        "host": "Brittany Luse and Eric Eddings",
+        "paragraphs": [
+            "The Nod, hosted by Brittany Luse and Eric Eddings, is a culture show made from inside Black conversation rather than from a panel explaining it to someone else.",
+            "Episodes can be an interview, a reported story, or the two hosts thinking out loud about a show, a scandal, or a habit. The title refers to recognition, and the edit assumes the listener can catch a reference.",
+            "Gimlet gave them a narrative freedom that a lot of culture chat does not have. When they report, they report. When they riff, the riff has a point of view you could disagree with.",
+            "It is not a single serial. Pick an episode whose guest or subject you already have an opinion about, and let them complicate it.",
+        ],
+    },
+    "Uncivil": {
+        "host": "Jack Hitt and Chenjerai Kumanyika",
+        "paragraphs": [
+            "Uncivil, hosted by Jack Hitt and Chenjerai Kumanyika, retells the American Civil War through people the usual battlefield story leaves out.",
+            "Spies, enslaved people who used the chaos, women running households as strategy. The production is adventurous, with reenactment used as a tool and then questioned.",
+            "The series is narrative history with a grudge against marble monuments. Kumanyika’s presence keeps the show from becoming a clever white revisit of a war he was not meant to narrate.",
+            "Episodes stand alone. The trailer-like intros in later feeds are not required. A single story is a complete meal.",
+        ],
+    },
+    "Every Little Thing": {
+        "host": "Flora Lichtman",
+        "paragraphs": [
+            "Every Little Thing is Gimlet’s curiosity show, hosted for much of its life by Flora Lichtman, answering questions that sound small and are not.",
+            "Why sidewalks, why a feeling, why a noise. Reporters and comics go find the person who has already ruined their week on that question. The answers have scenes.",
+            "The series proved that explanatory audio does not have to be a voice reciting a study. A question from a listener becomes a character with a job.",
+            "The feed includes crossovers from sibling shows. Choose episodes that name a single odd question if you want the original form.",
+        ],
+    },
+    "Crimetown": {
+        "host": "Marc Smerling and Zac Stuart-Pontier",
+        "paragraphs": [
+            "Crimetown, from Marc Smerling and Zac Stuart-Pontier, tells the story of a city’s corruption as a season-long narrative, starting with Providence and Buddy Cianci.",
+            "Politicians, bookies, and neighbors share the tape. The show is interested in how a place decides who the bad guy is, and how often the answer is useful to someone still in office.",
+            "It sits between a true-crime serial and a civic history. The crimes are real. The unit of storytelling is the city, not the autopsy.",
+            "Play a season from the first episode. Later seasons change cities, and the Providence chapters do not make sense backwards.",
+        ],
+    },
+    "Decoder Ring": {
+        "host": "Willa Paskin",
+        "paragraphs": [
+            "Decoder Ring, hosted by Willa Paskin at Slate, takes one object or fad and reports it until the joke becomes a history.",
+            "A costume, a commercial, a fear that swept a suburb. Paskin is a critic, so the episodes are arguments as well as stories. Someone made the thing, and someone needed it.",
+            "The show is what cultural reporting sounds like when it refuses listicles. You get characters: the inventor, the fan, the person who was there when the meaning flipped.",
+            "Episodes are independent. The titles are specific. Trust a title that names a single artifact.",
+        ],
+    },
+    "Fiasco": {
+        "host": "Leon Neyfakh",
+        "paragraphs": [
+            "Fiasco is Leon Neyfakh’s season-long history of a political disaster, told with the pacing of a serial rather than the pace of a textbook.",
+            "Iran-Contra, the 2000 election, the Boston busing crisis, the AIDS fight. Each season picks a fiasco whose official story has gone smooth, and then plays the tape from when it was still sharp.",
+            "Neyfakh came from Slow Burn’s orbit and built a sister form: archival audio, interviews with the people who were in the meetings, and a narrator who enjoys the grim irony without winking past the damage.",
+            "Commit to a season. A later feed may advertise his other series. The chapters labeled as the season you started are the ones that pay off.",
+        ],
+    },
+    "Things Fell Apart": {
+        "host": "Jon Ronson",
+        "paragraphs": [
+            "Things Fell Apart is Jon Ronson tracing culture-war fights back to the odd, specific incidents that set them off.",
+            "He is interested in the first telling of a story that later became a weapon. Interviews are gentle and then unsettling, which is Ronson’s usual instrument.",
+            "BBC Radio 4 gave the series a calm frame. The content is not calm. A school fight, a rumor, a pamphlet: Ronson shows how a small scene hardens into a national identity.",
+            "Episodes can be heard alone, but a season is a set of origin stories that comment on each other. The cheerful delivery is not reassurance.",
+        ],
+    },
+    "Wind of Change": {
+        "host": "Patrick Radden Keefe",
+        "paragraphs": [
+            "Wind of Change is Patrick Radden Keefe testing a rumor that the CIA wrote the Scorpions power ballad of the same name as Cold War soft power.",
+            "The investigation is also a road trip through hair metal, defectors, and the way a song colonizes a childhood. Keefe is a reporter who likes a yarn and keeps the sourcing visible.",
+            "The series is a model of narrative nonfiction that is allowed to be fun. The fun does not erase the question of what governments think culture is for.",
+            "It is one serial. The chorus will get stuck in your head anyway. The reporting answer, such as it is, arrives only if you stay for the last interviews.",
+        ],
+    },
+    "Against the Rules with Michael Lewis": {
+        "host": "Michael Lewis",
+        "paragraphs": [
+            "Against the Rules is Michael Lewis on referees: the people whose job is to be fair in sports, finance, courts, and any market that pretends it does not have a judge.",
+            "Lewis reports and narrates in the clean, story-first style of his books. An official, a regulator, or a whistleblower becomes a protagonist with a system pressing on them.",
+            "The podcast is worth hearing if you know his later work and want the same method at episode length. He is skeptical of anyone who claims the rules enforce themselves.",
+            "Seasons group around a theme. A single episode still lands. When the feed promotes an audiobook, skip to the next reported chapter.",
+        ],
+    },
+    "Blowback": {
+        "host": "Brendan James and Noah Kulwin",
+        "paragraphs": [
+            "Blowback, hosted by Brendan James and Noah Kulwin, tells the story of an American war or intervention as a season, with the consequences treated as the plot rather than the epilogue.",
+            "Iraq, Cuba, Korea, and others. The tone is angry, researched, and often funny in a way that will annoy listeners who wanted solemnity. Interviews with people who lived the policy sit next to the hosts’ indictment.",
+            "The series is popular because it is a narrative history with a thesis you can argue with. It does not pretend the United States stumbled into these stories without a motive.",
+            "A season is the unit. The hosts’ banter in the open is not the reporting. The reporting is the interviews and the archive they build the case from.",
+        ],
+    },
+    "The Stoop": {
+        "host": "Leila Day and Hana Baba",
+        "paragraphs": [
+            "The Stoop is Leila Day and Hana Baba talking about Black life with the ease of a conversation on the steps and the discipline of two reporters.",
+            "Subjects jump from family habits to news to culture without a panel format. When they report, they bring tape. When they talk, they talk to each other, not to an imaginary skeptic.",
+            "The show has been a home for narrative pieces about the Black diaspora that did not need a tragic news peg. Joy is allowed to be the story.",
+            "Episodes vary in weight. The title usually tells you whether you are getting a feature or a conversation. Both are the show.",
+        ],
+    },
+    "Still Processing": {
+        "host": "Wesley Morris and Jenna Wortham",
+        "paragraphs": [
+            "Still Processing is Wesley Morris and Jenna Wortham thinking in public for the New York Times, about a film, a song, a news event, or the culture of the workplace.",
+            "The episodes are conversations with a written spine. They disagree, they loop, they land on a line that could have been a column and is better because you heard them find it.",
+            "The show is criticism as narrative: two people with taste and reporting instincts walking through why a thing feels the way it feels this week. Wortham and Morris do not flatten that into a verdict for a homepage.",
+            "It has had pauses and side projects. An episode that introduces another show is not the series. Pick one where both hosts are in the conversation.",
+        ],
+    },
+    "Dissect": {
+        "host": "Cole Cuchna",
+        "paragraphs": [
+            "Dissect is Cole Cuchna spending a whole season inside one album, one song per episode, bar by bar.",
+            "Kendrick Lamar, Kanye West, Beyoncé, Radiohead, Tyler, the Creator. Cuchna treats production choices as plot points. A beat change is an event.",
+            "The series is narrative music criticism for people who want to hear the record differently afterward, not a gossip show about the artist’s week. The argument is in the timestamps.",
+            "You need the album nearby, or at least fresh in your ear. Hearing the episode without the song is like reading a map in the dark. Seasons are built to be played in track order.",
+        ],
+    },
+    "9/12": {
+        "host": "Dan Taberski",
+        "paragraphs": [
+            "9/12, hosted by Dan Taberski, asks how the day after September 11 turned into a permanent idea, told through people who were children or close to the machinery that followed.",
+            "Pineapple Street produced it. Taberski, who had already made Missing Richard Simmons, uses the same close, slightly nervous interviewing on a subject people usually approach with a pre-written speech.",
+            "The series is narrative history of a mood. Policy and kitsch and family stories share the episodes, because that is how the years actually felt.",
+            "Play the reported chapters, not the later network promos that sit at the top of the feed. The season is complete enough to hear as one piece.",
+        ],
+    },
+    "Ghost Story": {
+        "host": "Tristan Redman",
+        "paragraphs": [
+            "Ghost Story is Tristan Redman, a journalist who does not believe in ghosts, investigating the bedroom he slept in as a teenager and the death connected to the house next door.",
+            "Pineapple Street built it as a short serial. Redman interviews family, neighbors, and the record, and he keeps his skepticism in the narration so the listener can hold it too.",
+            "The series is a narrative about grief and houses as much as it is about a haunting. The question of belief is left honest. The question of what happened to a woman is not treated as a parlor game.",
+            "Hear the episodes in order. A promo for another title sometimes leads the feed. The chapters about the house are the show.",
+        ],
+    },
+    "The Last Days of August": {
+        "host": "Jon Ronson",
+        "paragraphs": [
+            "The Last Days of August is Jon Ronson’s serial about the death of adult-film performer August Ames, and the online cruelty that surrounded her final days.",
+            "Ronson talks to people who loved her, people who worked with her, and people who participated in the pile-on. He is visibly uneasy about his own presence in the story.",
+            "The series is narrative reporting on shame and the internet, from a writer who has spent years on public shaming as a subject. It does not offer a neat villain and a moral you can wear.",
+            "It is one short season. The material is bleak. Ronson’s softness is not a solution, and the show does not pretend that it is.",
+        ],
+    },
+    "Heaven's Gate": {
+        "host": "Glynn Washington",
+        "paragraphs": [
+            "Heaven’s Gate, narrated by Glynn Washington, reconstructs the group that died together in 1997 and the years of belief that made that ending feel, to them, like sense.",
+            "Former members and archival tape carry the episodes. Washington, known from Snap Judgment, tells it as a story of community and control, not as a freak-show countdown.",
+            "The series is one of the clearer cult narratives in audio because it stays with how ordinary the daily life could look. Doctrine arrives as a schedule, a haircut, a rehearsal.",
+            "Ten chapters, in order. The comet is not the beginning. The beginning is the class and the people who stayed.",
+        ],
+    },
+    "The Turning: The Sisters Who Left": {
+        "host": "Erika Lantz",
+        "paragraphs": [
+            "The Turning: The Sisters Who Left is Erika Lantz’s investigation of the Missionaries of Charity, the order founded by Mother Teresa, told by women who took vows and then walked away.",
+            "The reporting asks what obedience felt like in the body: rules, silence, the gap between the public saint and the house. Lantz lets former sisters narrate rather than staging a debate about holiness.",
+            "The series is narrative religion reporting with the pace of a serial. Faith is not the villain. A system that cannot be questioned from inside is the subject.",
+            "Season one is the story to start. Later seasons of The Turning move to other communities. The sisters’ episodes are a complete arc.",
+        ],
+    },
+    "Bundyville: The Remnant": {
+        "host": "Leah Sottile",
+        "paragraphs": [
+            "Bundyville is Leah Sottile’s reporting on the Bundy family, the armed standoffs attached to their name, and the theology under the anti-government politics.",
+            "The Remnant season steps past the famous ranch and into the wider network that treated those standoffs as prophecy. Oregon Public Broadcasting and Longreads backed the work.",
+            "Sottile is a narrative journalist who stays with primary actors instead of summarizing extremism from a studio. The danger is specific: a meeting, a weapon, a verse.",
+            "The original season and The Remnant are sequential. A trailer may sit at the top of a feed. The numbered episodes are the reporting.",
+        ],
+    },
+    "Believed": {
+        "host": "Kate Wells and Lindsey Smith",
+        "paragraphs": [
+            "Believed, from Michigan Radio and NPR, is Kate Wells and Lindsey Smith’s account of Larry Nassar’s abuse and the institutions that kept athletes in the room.",
+            "Survivors speak in their own tempo. The reporters document police, a university, and a sports system that treated complaints as noise. The title is about who was believed, and when.",
+            "The series is narrative accountability reporting. It does not aestheticize the crimes. It follows the paper and the people who had to repeat themselves.",
+            "It is a completed serial and a hard listen. The epilogue is part of the story, because the bow the institutions wanted is the thing the show refuses.",
+        ],
+    },
+    "Stolen": {
+        "host": "Connie Walker",
+        "paragraphs": [
+            "Stolen is Connie Walker’s investigative series about Indigenous families and the systems that misplace their dead and their children.",
+            "Seasons have followed a mother’s disappearance and the survivors of a residential school, among other cases. Walker reports as a Cree journalist with a personal stake she does not hide, and with documents.",
+            "The show is narrative true crime that keeps widening the frame from a single body to a policy. Listening only for the twist misses the point she is making about whose disappearance counts as urgent.",
+            "Each season is its own serial. Start at that season’s first chapter. Network promos sometimes lead the feed and are not the investigation.",
+        ],
+    },
+    "The Missing Cryptoqueen": {
+        "host": "Jamie Bartlett",
+        "paragraphs": [
+            "The Missing Cryptoqueen is Jamie Bartlett’s BBC investigation of OneCoin and Ruja Ignatova, the founder who sold a cryptocurrency that investigators say was a fraud and then vanished.",
+            "Bartlett follows victims, insiders, and the sales meetings that looked like a movement. The reporting is brisk and skeptical, with the mechanics of the scheme explained through people who bought in.",
+            "The series is a financial narrative that plays like a chase. The larger subject is how a community can be recruited to defend the person taking its money.",
+            "Hear the original season in order. Later updates exist. The vanishing is not the first episode’s cliffhanger if you already know the headline. The meetings are.",
+        ],
+    },
+    "Sweet Bobby": {
+        "host": "Alexi Mostrous",
+        "paragraphs": [
+            "Sweet Bobby, reported by Alexi Mostrous for Tortoise, is the story of a woman drawn into a decade-long romance with a person who was not who the phone said he was.",
+            "The series is built from her messages and from the investigation into who was on the other end. Mostrous is careful about the victim’s agency and about the sheer number of hours the deception required.",
+            "It became a reference catfishing narrative because the scale is so extreme that the usual jokes do not fit. The reporting asks how a life can be organized around a voice.",
+            "It is a short serial. Play it in order, and treat recap episodes as optional. The primary account is the one that changes your sense of what a message thread can do.",
+        ],
+    },
+    "The Shrink Next Door": {
+        "host": "Joe Nocera",
+        "paragraphs": [
+            "The Shrink Next Door is Joe Nocera’s story of a psychiatrist who became entangled in a patient’s life, money, and house, told years later by the patient and the people around the practice.",
+            "Nocera was a neighbor. The access starts there and then becomes reporting: sessions that stopped being sessions, a family pushed out, a Hamptons social life built on someone else’s trust.",
+            "The series is a narrative about professional power. It is also funny in places, because the social details are so specific, and then it is not funny at all.",
+            "The original episodes are the show. A feed that opens with an ad for a different series is the network talking. Skip to the neighborhood.",
+        ],
+    },
+    "WeCrashed": {
+        "host": "Wondery",
+        "paragraphs": [
+            "WeCrashed tells the rise and stall of WeWork through Adam Neumann’s pitch, the investors who wanted a movement, and the employees inside the slogan.",
+            "The companion series was built as narrative business reporting: scenes from the early office, the valuation, the attempted public offering, the personality cult of a company that rented desks.",
+            "It works if you want the story as a story rather than as a business-school case with the jokes removed. The numbers matter. The parties matter too, because they were part of the valuation.",
+            "Play the original chapters in order. Recent items at the top of the feed may be ads for other series. The WeWork episodes identify themselves.",
+        ],
+    },
+    "The Dropout": {
+        "host": "Rebecca Jarvis",
+        "paragraphs": [
+            "The Dropout is Rebecca Jarvis’s ABC News serial about Elizabeth Holmes, Theranos, and the investors and patients who were told a finger-prick could replace a lab.",
+            "Jarvis reported the company for years. The podcast uses that reporting as a timeline: the voice, the board, the employees who tried to say the machine did not work.",
+            "The series is the narrative version of a business scandal, with Holmes as a character and the lab as the plot. It is more interested in who stayed quiet than in the later screen adaptation.",
+            "Season one is the complete rise and fall. Later updates about the sentencing are an afterword. Start with the founding, or the fear in the lab will not have a setup.",
+        ],
+    },
+    "Dirty John": {
+        "host": "Christopher Goffard",
+        "paragraphs": [
+            "Dirty John is Christopher Goffard’s Los Angeles Times serial about Debra Newell and the man she married, a con told from inside a family that kept trying to warn her.",
+            "Goffard’s newspaper investigation became audio without losing the reporting. Sisters, dates, and a past that was available to anyone who looked: the dread is procedural.",
+            "The series was a pivot point for narrative true crime because a metro paper treated it as a story with characters, not as a case summary. The ending is worse than a twist. It is a choice.",
+            "The original episodes are the work. Later bonuses about the television version are optional. Hear Debra’s family first.",
+        ],
+    },
+    "Dr. Death": {
+        "host": "Laura Beil",
+        "paragraphs": [
+            "Dr. Death, reported by Laura Beil, began with Christopher Duntsch, a neurosurgeon in Texas whose operations left patients maimed while hospitals kept letting him work.",
+            "Later seasons move to other medical harm, same method: records, survivors, and the professional courtesy that functioned as cover. Beil explains the medicine without turning it into spectacle.",
+            "The first season is a narrative about systems. A bad doctor is the character. The plot is every institution that had a reason not to be the one to stop him.",
+            "Start with season one and stay with Duntsch until the licensing story is clear. Newer items in the feed may advertise a different show. The season titles name the doctor.",
+        ],
+    },
+    "The Protocol": {
+        "host": "The New York Times",
+        "paragraphs": [
+            "The Protocol is a New York Times narrative series about medical care for transgender young people: where the treatment model came from, who it changed, and the political fight around it.",
+            "The episodes follow clinicians, patients, families, and critics, including the Dutch research that became a template and the reviewers who later challenged it. The tone is reported, not a rally.",
+            "Whatever a listener brings to the subject, the series is built as a history of a medical protocol under pressure. Scenes are clinics, reviews, and living rooms. The legislation arrives as consequence.",
+            "Six parts, in order. The early episodes explain the care. The later ones are about the backlash and the evidence fights. Hearing only one end of that sequence is a different show.",
+        ],
+    },
+    "Chameleon: Hollywood Con Queen": {
+        "host": "Campside Media",
+        "paragraphs": [
+            "Chameleon: Hollywood Con Queen investigates a scammer who posed as powerful women in the film industry and sent freelance workers on expensive, humiliating errands.",
+            "Campside and reporters follow the people who lost money and time, and the long effort to name the person on the phone. The series is one season of a franchise that later told other cons.",
+            "It is narrative fraud reporting with a Hollywood setting that never quite becomes glamour. The interest is in the performance: accents, titles, the hunger of people who wanted the job to be real.",
+            "Play the Hollywood season’s chapters, which identify themselves. Other Chameleon seasons are separate stories and sometimes arrive as promos in the same neighborhood of the feed.",
+        ],
+    },
+}
+
+# Slug -> paragraphs for shows already on the shelf whose detail pages were thin.
+EXISTING = {
+    "this-american-life": [
+        "This American Life is Ira Glass’s weekly hour from WBEZ, built around a theme and then abandoned to whatever the tape does.",
+        "Acts are separate stories that share a word more than they share a thesis. A personal essay can sit next to an investigation. The host’s job is the handoff, not the moral.",
+        "The show is the template a lot of narrative audio is still answering. Glass’s interviews sound casual and are ruthlessly structured. A pause is usually a decision.",
+        "The episodes are an hour and they mean it. If you only have twenty minutes, pick a single act that the chapter list names, and save the theme music for a day when you can hear the turn.",
+    ],
+    "snap-judgment": [
+        "Snap Judgment, hosted by Glynn Washington, tells true stories with the timing of a thriller and a score that does not sit in the background.",
+        "Storytellers perform their own lives. Producers shape the hour so a reveal lands on a beat. The result is closer to a live show than to a reported feature, even when the reporting is real.",
+        "Washington’s hosting is a character: preacher cadence, comic timing, a willingness to go strange. The series proved narrative audio could be sweaty and still be documentary.",
+        "Night is the right hour. The mixes are built for attention, and a story that starts playful may not stay that way.",
+    ],
+    "search-engine": [
+        "Search Engine is PJ Vogt taking a question that will not leave him alone and reporting it until the question changes shape.",
+        "He came out of Reply All. The new show is less a workplace comedy and more a series of hunts: a rumor, a technology, a personal fixation, with Sruthi Pinnamaneni often in the edit.",
+        "The pleasure is hearing a host admit the search is unreasonable and then do it anyway. Episodes are narrative because the dead ends stay in.",
+        "They vary in length. A short one can be a complete thought. A long one should be heard in a sitting, because Vogt’s asides are load-bearing.",
+    ],
+    "embedded": [
+        "Embedded is NPR’s slot for reported series that need a season, not a day. A team moves into one story and stays.",
+        "The subjects change: a network, a scandal, a system. The method does not. Correspondents gather tape, and the host of that season walks you through what they were allowed to see.",
+        "It is the institutional home for the narrative work that will not fit Up First. When Embedded is good, you learn the geography of a place you had only heard as a headline.",
+        "Treat each series as its own show. The feed mixes seasons. The episode titles usually name which series you are about to enter.",
+    ],
+    "twenty-thousand-hertz": [
+        "Twenty Thousand Hertz, hosted by Dallas Taylor, is a narrative series about sound itself: a noise you recognize and have never thought about.",
+        "An episode might be a warning tone, a piece of film audio, the voice of a machine. Taylor interviews the people who designed the sound or were changed by it, and he scores the explanation with the thing being explained.",
+        "The show made a niche feel obvious. Once you hear how a sonic logo was built, ordinary rooms get louder. That is the trick, and it is also the reporting.",
+        "Episodes are short and self-contained. Headphones change the show. Speakers will still work, but you will miss the differences Taylor is pointing at.",
+    ],
+    "the-daily": [
+        "The Daily is the New York Times’ morning narrative: one story, told in about twenty minutes, before the rest of the news has finished shouting.",
+        "Michael Barbaro built the early voice. Rachel Abrams, Natalie Kitroeff, and a rotation of hosts have carried it since. A correspondent who reported the piece is usually the person walking you through it.",
+        "The form is the contribution. Instead of a roundup, you get a scene, a question, and the finding. It is news, structured like a feature, on a deadline that does not allow a season.",
+        "It is made to be heard the day it comes out. Older episodes are still coherent, but the show assumes you share the week it was born in.",
+    ],
+    "crime-junkie": [
+        "Crime Junkie is Ashley Flowers and Brit Prawat walking through a case in a tight, conversational script, with updates when the story moves.",
+        "Flowers runs audiochuck, and the show is the engine of that company. The episodes are researched summaries more than boots-on-the-ground investigations, and they say so by the way they tell you what is known.",
+        "The series became huge because the format is reliable: one case, a clear timeline, a host who sounds like she is telling a friend. That reliability is also the criticism, and listeners can hear the difference from a reported serial.",
+        "New episodes land weekly. If a case has had a later development, look for the update rather than assuming the original hour is the last word.",
+    ],
+    "serial": [
+        "Serial, from Sarah Koenig and Serial Productions, is the show that taught a mass audience to wait a week for the next chapter of a reported story.",
+        "Season one was Adnan Syed and Hae Min Lee. Later seasons and sibling series moved through the military, Cleveland, and other institutions. The method is the same: a reporter who lets you hear her change her mind.",
+        "Koenig’s narration is the instrument. She is present, doubtful, and specific about what the documents say. The cultural aftershock was enormous. The episodes themselves are still a reporting project, not a brand extension.",
+        "Play a season from its first chapter and do not shuffle. The opening episodes show you which facts are still unstable.",
+    ],
+    "smartless": [
+        "SmartLess is Jason Bateman, Sean Hayes, and Will Arnett interviewing a guest they have not been told about in advance.",
+        "The opening is the three of them talking over each other until the surprise walks in. The interview that follows is looser than a promotional stop and more star-driven than a reporting show. The chemistry is the product.",
+        "It became one of the big conversation podcasts because the hosts are professionals at seeming unprepared. The guest still gets a real hour, and sometimes says the thing the junket would have cut.",
+        "You can start with any guest you already like. The cold open is funnier once you know the trio’s rhythms, so a second episode is more representative than a first.",
+    ],
+    "the-joe-rogan-experience": [
+        "The Joe Rogan Experience is a long, unscripted conversation. Joe Rogan and a guest talk for hours about fighting, comedy, science, politics, or whatever the guest brought in the door.",
+        "There is no tight edit and no pretence of a theme. The show’s influence comes from that length: claims get repeated, challenged, or left sitting in the air. Listeners treat it as a place arguments go to become familiar.",
+        "Rogan is a curious host with a large audience and a light hand on the fact-check. Episodes are primary sources of a certain American conversation, which is a reason to hear them and a reason to stay awake while you do.",
+        "They are very long. Pick a guest whose work you can judge, and do not assume the most viral ten minutes was the point of the hour.",
+    ],
+    "radiolab": [
+        "Radiolab, from WNYC, is Jad Abumrad and the show’s producers turning a question about science, philosophy, or a strange fact into a scored story.",
+        "Lulu Miller, Latif Nasser, and a deep bench have hosted as the show has aged. The sound design is not decoration. A stutter edit or a musical bed is part of how the idea is explained.",
+        "The series taught a generation that a reported feature could feel like a composition. Later years widened into politics and the body without dropping the obsession with how something works.",
+        "Older episodes are often the purest version of the method. Newer ones may be a season with a single theme. The episode page usually tells you which you are holding.",
+    ],
+    "planet-money": [
+        "Planet Money, from NPR, explains the economy by following one transaction until it becomes strange.",
+        "A t-shirt, a mortgage, a parking spot, a number in a federal release. Reporters including the long-running crew around the show make the abstraction concrete, then tell you the incentive hiding inside it.",
+        "The series is narrative economics: characters with jobs, not a chart read aloud. It has also built side experiments, from buying a toxic asset to making a t-shirt, that are stories in their own right.",
+        "Most episodes are short. The indicator-style updates and the longer investigations share a feed. Choose the one whose title names a thing, not a news cycle, if you want the classic form.",
+    ],
+    "stuff-you-should-know": [
+        "Stuff You Should Know is Josh Clark and Chuck Bryant explaining one topic per episode, from the history of an object to the mechanics of a phenomenon.",
+        "The iHeart show is conversational on purpose. They research, then talk, and the tangents are part of the house style. A listener learns by overhearing two people get interested.",
+        "It has run for years because the premise never needed a news peg. Any subject can be the show if they can make the first five minutes feel like a discovery rather than a lecture.",
+        "Episodes are long and independent. Pick a subject you think you already understand. That is usually when they have the most to add.",
+    ],
+    "dateline-nbc": [
+        "Dateline NBC is the television newsmagazine’s audio edition: a true-crime narrative reported by the network’s correspondents, often with Keith Morrison or another familiar voice.",
+        "The episodes follow a case the way the Friday-night program does, with interviews, timelines, and a slow walk toward what the jury heard. It is produced journalism from a TV shop, not a recap channel.",
+        "Listeners who know the broadcast will recognize the pacing. Listeners who do not still get a complete story, because the show is built to be followed by someone who missed the original airing.",
+        "One episode is one case. They are long. The update, if there is one, is usually labeled, and it is worth hearing after the original rather than instead of it.",
+    ],
+    "fresh-air": [
+        "Fresh Air is Terry Gross’s long-running interview show from WHYY, distributed by NPR, plus interviews led by Tonya Mosley and others.",
+        "An author, an actor, a scientist, a politician. Gross’s reputation is for preparation so deep that the guest ends up saying what they did not plan to say. The questions are specific, often about craft or childhood, and they are not soft.",
+        "The archive is a record of several decades of American culture told by the people who made it. A 1995 interview and a new one share a method: listen, then ask the thing the publicist hoped you would skip.",
+        "The weekday editions can hold two segments. If you came for one guest, check the chapter marks. The interviews reward the full length more than a clip does.",
+    ],
+    "the-bill-simmons-podcast": [
+        "The Bill Simmons Podcast is Simmons talking sports, media, and the NBA in particular, with guests who range from players to his own colleagues at The Ringer.",
+        "The episodes are loose and long, closer to a radio show that grew up with blogs than to a produced narrative. Simmons’s takes are the point. He remembers trades the way other hosts remember lyrics.",
+        "The show is a hub. Rewatchables and other Ringer series live nearby, but this feed is the one where Simmons himself is working through the week.",
+        "Start with a guest from a sport you follow. The in-jokes about his own career make more sense after you have heard him be wrong in public, which he will be, cheerfully.",
+    ],
+    "heavyweight": [
+        "Heavyweight is Jonathan Goldstein helping someone go back to a moment they cannot stop replaying, to see if anything can still be repaired.",
+        "A friendship, a parent, a humiliation at school. Goldstein travels, knocks on doors, and is often the most anxious person in the scene. The jokes are his way of staying in the room.",
+        "The series, from Gimlet and later Pushkin, is a high point of personal narrative. The stakes are small on paper and enormous to the person who brought them. Goldstein does not pretend he is a therapist. He is a friend with a microphone and a theory.",
+        "Episodes are complete stories. The best ones hurt a little and then resolve into something more complicated than an apology. Hear one, then stop, then hear another.",
+    ],
+    "99-percent-invisible": [
+        "99% Invisible, created by Roman Mars, is a narrative series about the design of things people are not supposed to notice.",
+        "A curb cut, a flag, a sound, a city plan. Mars and his producers, including a long collaboration with the Radiotopia world, report the object until it has a designer, a fight, and a consequence.",
+        "The show changed how a lot of listeners walk down a street. That is a ridiculous claim and also the actual effect. Design is treated as a set of decisions, not as taste.",
+        "Episodes are often short. The longer investigations still use the same door: one visible thing, then the invisible argument that produced it.",
+    ],
+    "reply-all": [
+        "Reply All, hosted first by PJ Vogt and Alex Goldman, was Gimlet’s show about the internet as a place where people actually live.",
+        "Yes Yes No segments explained a tweet. Reported episodes went inside scams, fandoms, and the company’s own failures. The series paused and ended after a reckoning over its workplace, which is now part of the story of the show.",
+        "At its best it was narrative journalism about online life that did not condescend to the people who cared. The tape was funny because the hosts were, and the reporting still had to hold.",
+        "The archive is uneven by design. Super Tech Support stories and the long investigations are different animals. Read the title. Both are worth hearing for different reasons.",
+    ],
+    "criminal": [
+        "Criminal, hosted by Phoebe Judge, tells stories about crime that are really stories about people who did something, or had something done to them, and then had to continue their lives.",
+        "The cases are not chosen for shock. A small theft can get the same care as a famous trial. Judge’s narration is dry, and the interviews are allowed to include affection, boredom, and regret.",
+        "The series, now with Vox Media, is a model of narrative true crime that does not need a cliffhanger. You stay because you want to know who this person is, not because a soundtrack told you to be afraid.",
+        "Episodes stand alone and are usually one sitting. The sister show This Is Love uses the same muscles on a different subject. Criminal itself rarely needs a previous chapter.",
+    ],
+    "casefile": [
+        "Casefile is an Australian narrative of true-crime cases told in a careful, anonymous host voice, with the emphasis on chronology and sourcing.",
+        "The episodes are long. They are written to be exhaustive rather than chatty. A listener who wants banter will be impatient. A listener who wants the sequence of a case, including the boring official parts, is the audience.",
+        "The show’s restraint became its signature. The host does not brand himself over the victims. That choice is why the series is recommended by people who are otherwise tired of the genre.",
+        "Pick a single case and finish it. Multi-part episodes are labeled. Starting in the middle of a multi-part is how the show becomes a blur of names.",
+    ],
+    "how-i-built-this": [
+        "How I Built This is Guy Raz interviewing founders about the unglamorous middle of a company: the loan, the fight, the almost-failure.",
+        "The NPR and later Wondery versions share the same spine. Raz is an enthusiastic interviewer who still asks about the moment the payroll was not going to clear. Founders get to be proud and also specific.",
+        "The series is business narrative as oral history. You are not getting a strategy framework. You are getting a person reconstructing the years before the brand was inevitable.",
+        "Episodes are independent. The founder’s name in the title is the table of contents. The advice segments at the edges matter less than the story of the second year.",
+    ],
+    "how-i-built-this-with-guy-raz": [
+        "This feed of How I Built This is Guy Raz in conversation with people who turned an idea into an organization, told as a life story rather than a pitch.",
+        "He walks guests back to the first bad version of the product. The useful part is rarely the origin myth. It is the stretch when the company existed and the market did not care.",
+        "Listeners use the show as a catalog of decisions. Raz’s warmth keeps founders talking long enough to describe the decision they would rather summarize.",
+        "One company per episode. If you have heard another feed of the same series, choose a guest you have not heard. The method repeats. The particulars do not.",
+    ],
+    "the-diary-of-a-ceo": [
+        "The Diary of a CEO is Steven Bartlett’s long interview show, built around guests who have a body of work and are willing to talk about the cost of it.",
+        "Bartlett is a young founder hosting older operators, scientists, and entertainers. The episodes run long enough that a prepared answer usually breaks down into a story.",
+        "The series is popular because Bartlett asks about fear and routine with the same interest he brings to tactics. You can disagree with the guest and still learn what their week actually looks like.",
+        "They are long. The opening is often scene-setting. The sharper material tends to arrive after the guest has stopped delivering the talk they came to give.",
+    ],
+    "the-diary-of-a-ceo-with-steven-bartlett": [
+        "Steven Bartlett uses this Diary of a CEO feed for extended conversations with operators, clinicians, and public figures about how they make decisions under strain.",
+        "The format is an interview that is allowed to become a monologue and then get pulled back. Bartlett will follow a childhood detail until it connects to a business or a health claim, and he will also let a claim sit there for the listener to judge.",
+        "It is not a narrative serial. It is a room. The value depends on the guest. Bartlett’s skill is keeping the room from turning into a press tour.",
+        "Check the guest before you commit to two hours. When the guest has done the thing being discussed, the length pays off. When they are only famous for talking, it pays off less.",
+    ],
+    "acquired": [
+        "Acquired, hosted by Ben Gilbert and David Rosenthal, is a deep narrative history of one company per episode, often running several hours.",
+        "They walk through founding, financing, strategy, and the accidents. The research is the show. Listeners come for the feeling of sitting in on a very prepared conversation between two people who have read the footnotes.",
+        "The series became a surprise hit because it respects attention. There is no rush to the lesson. A product decision in 1998 gets the time it needs.",
+        "Do not start with the longest episode. Start with a company whose products you have used. The hosts’ cross-references make more sense once you have heard them tell one story cleanly.",
+    ],
+    "maintenance-phase": [
+        "Maintenance Phase, hosted by Aubrey Gordon and Michael Hobbes, debunks wellness trends and the junk science around weight, food, and celebrity health advice.",
+        "Gordon writes and speaks from experience in fat-acceptance work. Hobbes is a reporter who enjoys a bad study. Together they read the original paper, the press release, and the grift that followed.",
+        "The show is criticism as narrative. A diet, a bestseller, a moral panic: they tell you who sold it and who got hurt. The jokes are frequent. The citations are the point.",
+        "Episodes stand alone. A series about a particular guru is richer in order. Either way, they assume you can hear a sacred health claim and still ask about the sample size.",
+    ],
+    "if-books-could-kill": [
+        "If Books Could Kill, hosted by Michael Hobbes and Peter Shamshiri, takes a bestselling ideas book and asks whether the idea survives contact with the chapters.",
+        "Airport nonfiction is the prey: a big claim, a few studies, a title that promises a new way to see the world. The hosts read it so you can hear the argument fail in detail, with jokes.",
+        "The series is a narrative of intellectual fashion. You get the author’s rise, the book’s reception, and the specific page where the reasoning slips. It is criticism that tells a story about why the book sold.",
+        "You do not need to have read the book. That is the service. Hearing one episode is enough to recognize the template. Hearing three is enough to get angry about it.",
+    ],
+    "youre-wrong-about": [
+        "You’re Wrong About began as Sarah Marshall and a co-host revisiting a person or a panic that the culture had decided to remember incorrectly.",
+        "The episodes are long, researched, and surprisingly tender. A villain of a tabloid decade gets a timeline. Marshall’s writing is the draw: she is funny about cruelty without repeating it for sport.",
+        "The show built an audience that wanted corrections with context. Later years changed co-hosts. The method, a story told from the record rather than from the myth, is what to listen for.",
+        "Pick a subject you are sure you understand. The episode will take longer than you expect, and the extra time is usually the part that was left out of the documentary.",
+    ],
+    "you-re-wrong-about": [
+        "This feed of You’re Wrong About is the same project of revisiting maligned people and half-remembered scandals, told as narrative history rather than as a list of myths.",
+        "Sarah Marshall’s scripts linger on the magazine story, the courtroom, the joke that hardened into a fact. Co-hosts come and go. The interest is in how a public story gets its shape.",
+        "Listeners use it as a corrective to the documentary they already watched. The show is better when you let it be slow. A life does not speed up just because the tabloid did.",
+        "Choose a single subject. Multi-part episodes should be played in the order the titles suggest. The feed has years of them, and they do not require a host introduction anymore.",
+    ],
+    "the-history-of-rome": [
+        "The History of Rome is Mike Duncan’s narrative of the city from its founding stories through the fall of the western empire, told in chronological episodes.",
+        "Duncan recorded it as a solo history podcast before that was a crowded field. His tone is dry, clear, and willing to say when the sources are gossip. Emperors get their due and their absurdity.",
+        "The series is a completed education. Later history podcasters are in its debt, including Duncan himself, who went on to Revolutions. This is the one that starts at the beginning and keeps going.",
+        "Start at the start. There are a lot of episodes, and the names pile up. The early kingdom episodes are short, which is a kindness.",
+    ],
+    "fall-of-civilizations-podcast": [
+        "Fall of Civilizations, written and voiced by Paul Cooper, tells the story of a society that is gone, using archaeology, chronicles, and the landscape it left.",
+        "Episodes are long and carefully scored. Cooper is interested in how a city sounded when it worked, and how people at the time explained the collapse that had not happened yet.",
+        "The series is narrative history for listeners who want immersion without a fictional overlay. The research is worn lightly. The melancholy is earned by the details, not by the music alone.",
+        "One civilization per episode, and the episodes are a commitment. Set aside the time. Pausing in the middle of a city’s life makes the ending feel cheaper than it is.",
+    ],
+    "on-being": [
+        "On Being is Krista Tippett’s interview series about the inner life: poets, scientists, religious thinkers, and people doing ordinary work with an examined attention.",
+        "Tippett’s style is slow on purpose. She asks about the guest’s formation, not their takes. The show grew out of public radio and kept a commitment to conversation that does not panic when silence arrives.",
+        "Listeners come for permission to take meaning seriously without a sermon. The archive includes figures who rarely sat for this kind of hour anywhere else.",
+        "The conversations are long and they are not news. Pick a guest whose work you respect and let the first ten minutes be biography. The idea you came for shows up after the life does.",
+    ],
+    "science-friday": [
+        "Science Friday is the public-radio show, long associated with Ira Flatow and carried on by the Science Friday team, about the week’s research and the people doing it.",
+        "A physicist, a field biologist, a clinician. The episodes can be a single long conversation or a magazine of segments. The tone is curious and adult. It does not pretend every paper changes your life.",
+        "The series is a living archive of how scientific work was explained to a general audience across decades. When it is at its best, you hear the researcher’s actual question, not a headline glued on top.",
+        "Weekday editions move quickly. The longer interviews are the ones to save. Either way, the show assumes you can enjoy a method even when the result is not a gadget.",
+    ],
+    "npr-news-now": [
+        "NPR News Now is a short, frequently updated newscast: the headlines of the hour, read straight, without a theme or a guest.",
+        "It is the utility version of NPR. No narrative arc, no host’s essay. Correspondents’ tape appears when the news requires it. The rest is a clear read of what has happened.",
+        "The series exists so a listener can rejoin the day in a few minutes. It is not trying to be the show you recommend to a friend. It is trying to be accurate and finished before the next one replaces it.",
+        "Play the latest and then stop. Yesterday’s edition is already a document. The value is the update, not the archive.",
+    ],
+    "consider-this-from-npr": [
+        "Consider This is NPR’s afternoon explanation of one big story, built from the day’s reporting and usually over in about fifteen minutes.",
+        "A host frames what happened and why it is the story they chose. You get correspondent tape, context, and a sense of what is still unknown. It is news with a spine, not a diary.",
+        "The show is designed for a commute home. It assumes you might have heard the headline and still need the mechanism. That is a different job from The Daily’s morning feature, and it sounds different.",
+        "Hear it the day it is published. The episodes are topical enough that a week later you will want the next development, which will have its own edition.",
+    ],
+    "the-new-yorker-radio-hour": [
+        "The New Yorker Radio Hour is the magazine’s audio show, hosted for years by David Remnick, with conversations, reported pieces, and fiction readings.",
+        "A staff writer may explain the story they just finished. A guest may sit for an interview that would not fit in the print issue. The humor pieces and the political interviews share a feed and not a mood.",
+        "The series is a way to hear the magazine’s range without pretending every article wants to be a podcast. When a reported segment runs, it has the density of the writing it came from.",
+        "Check the segments. A single episode often holds more than one piece. The interview you want may be the second item, after a short that has nothing to do with it.",
+    ],
+    "dwarkesh-podcast": [
+        "Dwarkesh Podcast is Dwarkesh Patel interviewing scientists, founders, and historians at a length that lets a technical argument actually finish.",
+        "He prepares like a student who intends to keep up. The episodes with researchers are the core: a question about how a result was reached, then a follow-up that shows he read the paper.",
+        "The show found an audience that wanted ambition without the usual founder small talk. Patel is young, and the guests are often not. The imbalance works because the questions are specific.",
+        "They run long. Choose a guest whose field you can halfway follow. The episodes are not summaries for someone who wants the conclusion in the first minute.",
+    ],
+    "accidental-tech-podcast": [
+        "Accidental Tech Podcast is Marco Arment, John Siracusa, and Casey Liss talking every week about Apple, software, and the industry around their own work.",
+        "The show started as a side project among people who make things for the platform they are criticizing. The arguments are detailed. A menu change can get a twenty-minute hearing.",
+        "It has lasted because the hosts disagree in a way that is informed rather than theatrical. You learn the state of the ecosystem by listening to three power users lose patience with it.",
+        "The episodes are long and topical. The after-show and the tangents are part of the appeal. If you do not care about the week’s developer news, this is not the week to start.",
+    ],
+    "the-peter-attia-drive": [
+        "The Peter Attia Drive is Peter Attia’s long-form interview show about medicine, training, and the science of living longer, aimed at listeners who want the mechanism.",
+        "Guests are researchers and clinicians. Episodes often run well past an hour and include the caveats. Attia is a host who will stop a guest to define a term, which is the point.",
+        "The series is popular with people building a personal health practice and controversial when a claim outruns the evidence. The better episodes show their work. The listener still has to notice when they do not.",
+        "Pick a topic you have a reason to understand, not a highlight reel. The show is dense. A walk is a better context than a commute you cannot rewind.",
+    ],
+    "80-000-hours-podcast": [
+        "The 80,000 Hours Podcast interviews researchers and practitioners about how to spend a career on problems that are large, neglected, and possibly solvable.",
+        "Host Rob Wiblin and the 80,000 Hours team go long. A guest may talk through a cause area, biosecurity, nuclear risk, factory farming, or AI, with the assumptions stated rather than smuggled.",
+        "The show is a narrative of a research community talking to itself in public. You do not have to share the utilitarian frame to learn from the way they pressure-test a plan.",
+        "Episodes are very long and self-contained. Read the guest’s field before you press play. The introductions tell you the stakes the team cares about, and then the guest gets the rest of the time.",
+    ],
+    "sleep-with-me": [
+        "Sleep With Me, created by Drew Ackerman, is a bedtime podcast that is deliberately boring: a host meandering in a soft voice so your attention has nothing sharp to grab.",
+        "The episodes include a story that never quite becomes exciting. That is the design. Ackerman’s persona, Scooter, wanders through puns and plotless scenes until the listener drops off.",
+        "The series is a craft project about attention. It is not meditation guidance and it is not narrative you are meant to finish. Missing the ending means it worked.",
+        "Play it when you are already in bed. The volume should be low. If you are following the plot, turn it down further. There will not be a test.",
+    ],
+    "articles-of-interest": [
+        "Articles of Interest is Avery Trufelman’s series about clothes: one garment or fashion idea per season, reported as cultural history.",
+        "She came out of 99% Invisible, and the method shows. A plaid, a uniform, a wedding dress becomes a trail of labor, law, and taste. The writing is precise and the sound is intimate.",
+        "The show treats fashion as a system people live inside, not as a slideshow of trends. Listeners who do not think of themselves as style people still get a narrative about who was allowed to wear what.",
+        "Seasons are short and should be heard in order. A single episode from the middle of a garment’s history assumes the previous fitting.",
+    ],
+    "the-archers": [
+        "The Archers is BBC Radio 4’s long-running drama of rural life in the fictional village of Ambridge, on the air since 1951.",
+        "It began as a way to smuggle agricultural advice into a story and became a daily soap about families, farms, pubs, and the slow change of a place. The cast is huge. The plots move at the speed of a real week.",
+        "For a narrative catalog it is the opposite of a limited series. Continuity is the art. A listener who stays learns the hedges and the grudges the way a neighbor would.",
+        "Newcomers should start at a current week and accept that they will be confused. The confusion fades. Looking up a character guide is allowed and, for the first month, wise.",
+    ],
+    "tetragrammaton-with-rick-rubin": [
+        "Tetragrammaton is Rick Rubin in long conversation with artists, scientists, and other guests, recorded in a style as unhurried as his reputation.",
+        "Rubin asks simple questions and lets the guest roam. The episodes are not a master class with chapters. They are a visit. Music is often the door, and then the talk goes somewhere else.",
+        "The show is interesting when the guest has a practice they can describe, because Rubin’s gift is attention rather than interrogation. You hear someone explain how they actually spend a day.",
+        "They are long and they start slowly. Commit to one guest you care about. Sampling the first ten minutes of five episodes will convince you nothing happens, which is not quite true.",
+    ],
+    "monday-morning-podcast": [
+        "Monday Morning Podcast is Bill Burr’s weekly rant and conversation, a stand-up’s notebook delivered as audio.",
+        "He talks about his week, the news he bothered to have a feeling about, and the bits he is still shaping. Guests appear, but the core is Burr alone, pushing a thought until it becomes a joke or an argument.",
+        "The series is one of the long-running comedy feeds that feels like radio. The opinions are the show. They are not carefully fair, and he would be suspicious if you wanted them to be.",
+        "Start with a recent episode rather than the archive. The persona is consistent. The references are not. You will know within fifteen minutes if his register is one you want in your week.",
+    ],
+    "the-dollop-with-dave-anthony-and-gareth-reynolds": [
+        "The Dollop is Dave Anthony reading a strange American story to Gareth Reynolds, who has not heard it, so the jokes can be real.",
+        "The subjects are historical oddities, riots, grifters, and forgotten disasters. Anthony is the researcher. Reynolds is the audience. Together they turn a footnote into an hour that is both a history lesson and a comedy set.",
+        "The show has a political point of view that gets sharper in later years. The format stays: one story, told straight enough that the absurdity does not need to be invented.",
+        "Pick a topic from a century you think was sensible. The episodes are long, and the tangents are half the comedy. You do not need to have heard the previous one.",
+    ],
+    "this-past-weekend-w-theo-von": [
+        "This Past Weekend is Theo Von talking with comedians and other guests about the actual week, in a register that is southern, filthy, and unexpectedly specific.",
+        "Von’s questions come from an angle other interviewers would edit out. Guests who are used to promotion often end up describing a childhood or a vice in more detail than they planned.",
+        "The show is a comedy conversation, not a narrative serial. Its reputation comes from the clips, but the clips are pulled from long, wandering episodes that have a different rhythm.",
+        "An episode lives or dies by the guest. Choose someone who can stay in a weird question. The cold open is Von alone, and it tells you the mood before the guest arrives.",
+    ],
+    "letters-from-an-american": [
+        "Letters from an American is Heather Cox Richardson’s nightly essay, read aloud, about what happened in American politics that day and which older pattern it rhymes with.",
+        "Richardson is a historian. The letter places a vote, a speech, or a court ruling in a longer argument about democracy, money, and parties. It is commentary with footnotes in the prose.",
+        "The series became a daily ritual for listeners who wanted context without a panel. The point of view is explicit. The value is the historical comparison, which you can accept or test.",
+        "Read or hear the one from today. The archive is a diary of several years. Starting at the beginning is a project. Starting tonight still gives you the whole method.",
+    ],
+    "your-own-backyard": [
+        "Your Own Backyard is Chris Lambert’s investigation of the 1996 disappearance of Kristin Smart in San Luis Obispo, reported from the county where it happened.",
+        "Lambert interviews classmates, follows the sheriff’s record, and keeps the community’s rumors separate from what anyone can prove. The series is patient to the point of being local.",
+        "The show is narrative true crime by a person who did not start as a national host. That proximity is the reason it mattered. Tips and pressure around the case moved after people heard the episodes.",
+        "It is a serial. Start at the first episode even if you know the later legal outcome. The early interviews explain why the case sat still for so long.",
+    ],
+    "a-history-of-rock-music-in-500-songs": [
+        "A History of Rock Music in 500 Songs is Andrew Hickey telling the history of rock as five hundred individual tracks, each with the people who made it.",
+        "The episodes are researched essays. A song opens into a studio, a label, a scene, and the musicians who did not get the credit. Hickey is explicit about sources and about the limits of the stories rock tells about itself.",
+        "The series is a long narrative by accumulation. No single episode is the history. Together they are a corrective to the highlight reel.",
+        "Start at episode one even if you want a later decade. The early songs establish how Hickey handles credit, money, and myth. The episodes are dense enough to reward a pause.",
+    ],
+    "stuff-you-missed-in-history-class": [
+        "Stuff You Missed in History Class, from iHeart and long hosted by Tracy Wilson and Holly Frey, takes one historical subject and fills in the part the survey course skipped.",
+        "A person, a rumor, a technology, a crime. The hosts write and research the episodes and talk through them with footnotes in the conversation. The tone is engaged and not cute about suffering.",
+        "The back catalog is enormous, which is the offer. You can follow an odd question for years without running out of serious episodes. The show treats curiosity as a reason to check a source.",
+        "Episodes are independent. The title is a reliable guide. Multi-part stories are marked, and they are better in order than as a random draw.",
+    ],
+    "all-in": [
+        "All-In is a weekly conversation among Chamath Palihapitiya, Jason Calacanis, David Sacks, and David Friedberg about tech, markets, and politics.",
+        "The hosts are investors with strong opinions and overlapping friendships. The show is them arguing, often from inside the industry they are judging. That proximity is both the access and the limit.",
+        "Listeners come for the unfiltered version of a certain Silicon Valley worldview. You will hear a real disagreement and also a shared set of assumptions. Noticing which is which is the way to hear it.",
+        "They run long and they are glued to the week. A best-of clip is not the show. The show is the hour after the clip, when they keep talking.",
+    ],
+    "all-in-with-chamath-jason-sacks-and-friedberg": [
+        "This All-In feed is the same roundtable of Chamath Palihapitiya, Jason Calacanis, David Sacks, and David Friedberg, recorded as a standing argument about the week in technology and money.",
+        "They interrupt each other. They have stakes in the outcomes. The conversation is useful as a document of what a powerful circle thought was obvious in a given month.",
+        "It is not reported narrative. It is primary audio of a scene. Treat claims about the world as claims from that scene, and the episode becomes more interesting, not less.",
+        "Start with a week you remember. The references are current. The personalities are stable enough that one episode teaches you the seating chart.",
+    ],
+}
