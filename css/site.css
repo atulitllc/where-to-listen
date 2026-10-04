@@ -75,7 +75,8 @@ button, input { font: inherit; color: inherit; }
 }
 .skip:focus { top: 0.6rem; }
 
-.wrap { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; }
+/* Keep the reading rail broad like booksthere: 85% of the viewport, capped for wide screens. */
+.wrap { width: min(1320px, 85%); margin: 0 auto; }
 .site-head {
   position: sticky;
   top: 0;
