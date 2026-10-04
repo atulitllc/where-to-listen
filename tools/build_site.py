@@ -521,6 +521,59 @@ def bare_sentence(sentence, show):
     return re.sub(r"\s+", " ", text).strip().lower()
 
 
+def _apos(text):
+    return (text or "").replace("’", "'").replace("‘", "'").replace("`", "'")
+
+
+def _short_title(title):
+    text = re.sub(r"\s*[—–-]\s*(Complete|Volume\b.*)$", "", title or "", flags=re.I)
+    text = re.sub(r",?\s+Vol(?:ume|\.)\s+.*$", "", text, flags=re.I)
+    text = text.strip(" ,;—–-")
+    if len(text) > 140:
+        text = text[:137].rsplit(" ", 1)[0]
+    return text or (title or "")[:80]
+
+
+def title_variants(title):
+    """Titles as they were pasted into a shared sentence, longest first.
+
+    Same slot list as the booksthere blurb gate: the full title, the short title,
+    and the text before a colon, dash, volume, part, or chapter suffix.
+    """
+    title = title or ""
+    found = []
+    candidates = (
+        title,
+        _short_title(title),
+        re.split(r"\s*[:;]| -- | — | – ", title, maxsplit=1)[0],
+        re.sub(r"\s*[—–-]\s*(Complete|Volume\b.*)$", "", title, flags=re.I),
+        re.sub(r",?\s+Vol(?:ume|\.)\s+.*$", "", title, flags=re.I),
+        re.sub(r",?\s+Part\s+\d+.*$", "", title, flags=re.I),
+        re.sub(r",?\s+Chapters\s+.*$", "", title, flags=re.I),
+    )
+    for candidate in candidates:
+        candidate = _apos(candidate).strip(" ,;.-")
+        if len(candidate) < 8:
+            continue
+        if candidate.lower() not in {item.lower() for item in found}:
+            found.append(candidate)
+    found.sort(key=len, reverse=True)
+    return found
+
+
+def description_without_title(text, title):
+    """The note with this show's title replaced, so pasted copies compare equal."""
+    body = _apos(text or "")
+    for variant in title_variants(title):
+        body = re.sub(re.escape(variant), " TITLE ", body, flags=re.I)
+    return re.sub(r"\s+", " ", body).strip()
+
+
+def is_featured_show(show):
+    """Handwritten flagship notes are the featured set and stay out of the slot gate."""
+    return bool(show.get("featured") or show.get("handwritten"))
+
+
 def pack_paragraphs(kept):
     """Turn real sentences into as many as five paragraphs. Do not invent filler."""
     if not kept:
@@ -595,6 +648,19 @@ def finalize_descriptions(shows):
                 counts[key] += 1
     # A line shared by two shows is dropped when that show still has its own
     # sentence. The first show that would otherwise be empty keeps the line.
+    # A leading sentence that matches another non-featured show once the title
+    # is removed is the same kind of paste ("Welcome to the {title} podcast!").
+    # Drop that opener when the show still has a sentence of its own.
+    lead_slots = Counter()
+    for show in shows:
+        if is_featured_show(show) or essays[id(show)]:
+            continue
+        seq = packed[id(show)]
+        if not seq:
+            continue
+        lead_key = description_without_title(seq[0], show.get("title") or "").lower()
+        if lead_key:
+            lead_slots[lead_key] += 1
     claimed = set()
     for show in shows:
         essay = essays[id(show)]
@@ -614,7 +680,12 @@ def finalize_descriptions(shows):
                 continue
         unique = []
         shared = []
-        for sentence in packed[id(show)]:
+        seq = list(packed[id(show)])
+        if seq and not is_featured_show(show) and not essays[id(show)]:
+            lead_key = description_without_title(seq[0], show.get("title") or "").lower()
+            if lead_key and lead_slots[lead_key] > 1 and len(seq) > 1:
+                seq = seq[1:]
+        for sentence in seq:
             if re.search(r"part of the .{0,40} podcast network", sentence, re.I):
                 continue
             key = bare_sentence(sentence, show)
@@ -1278,6 +1349,7 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 - For Behind the Bastards, the newest item in the iHeart feed was a sibling show (“It Could Happen Here”). The page uses the newest item that is actually a Behind the Bastards episode.
 - Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top. Checked again on Oct 4, 2026: that feed was still another Slate show.
 - On Oct 4, 2026, 78 narrative series were added from each publisher’s own RSS. New show pages use a multi-paragraph catalog essay. Flagship pages that were still a sentence or two use the same kind of essay. Other pages use sentences already in the publisher summary, packed into as many as five paragraphs when the summary is long enough.
+- The build fails when two non-featured descriptions match after the show title is removed. Handwritten flagship notes are the featured set and are left as stored.
 
 ## Design
 
@@ -1357,6 +1429,35 @@ def check_anchors(page, label, problems):
         if blank and "noopener" not in tag:
             problems.append(f"noopener {label}")
             return
+
+
+def check_title_slot_descriptions(shows, problems):
+    """Fail when non-featured notes match after the show title is stripped.
+
+    Same comparison as the booksthere blurb gate: identical text, then the text
+    with this show's title (and its short-title variants) replaced by a slot.
+    Featured shows are the handwritten flagship notes.
+    """
+    for field in ("description", "sentence"):
+        groups = {}
+        slotted = {}
+        for show in shows:
+            if is_featured_show(show):
+                continue
+            text = (show.get(field) or "").strip()
+            if not text:
+                continue
+            slug = show.get("slug") or "?"
+            groups.setdefault(text, []).append(slug)
+            key = description_without_title(text, show.get("title") or "").lower()
+            if key:
+                slotted.setdefault(key, []).append(slug)
+        for slugs in groups.values():
+            if len(slugs) > 1:
+                problems.append(f"identical {field} on {len(slugs)} shows, including {slugs[0]}")
+        for slugs in slotted.values():
+            if len(slugs) > 1:
+                problems.append(f"title-slot {field} on {len(slugs)} shows, including {slugs[0]}")
 
 
 def visible_text(page):
@@ -1520,6 +1621,7 @@ def audit(shows):
         first = path.read_text()
         if 'href="../../css/site.css"' not in first:
             problems.append(f"category css {cat}")
+    check_title_slot_descriptions(shows, problems)
     lang_bare = re.compile(
         r"\b(french|spanish|italian|german|portuguese|chinese|japanese|korean|arabic|persian|english)\b",
         re.I,

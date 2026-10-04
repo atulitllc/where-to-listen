@@ -44,6 +44,16 @@ SLUG_COPY = {
         'Episodes take up relationships in ordinary detail: what share of a partner belongs to you, and how far family, friends, and former partners should come into the middle of a couple.',
         'The feed is in Persian, and the public page is jafekri.podbean.com.',
     ],
+    "keeping-families-connected": [
+        "Keeping Families Connected is a Christ-centered ministry show for families being pulled apart by conflict at home.",
+        "The episodes talk through faith, marriage, and divorce, and through how a parent keeps a relationship with a child when the household has already split.",
+        "A listed episode asks who has authority over those children, the parents or the state, and the public site is keepingfamiliesconnected.com.",
+    ],
+    "law-of-attraction-secrets": [
+        "Natasha Graziano hosts Law of Attraction SECRETS and teaches a method she calls meditational behavioral synchronicity.",
+        "Episodes mix that method with interviews about money, health, and relationships, including a conversation with Lee Patterson about using credit to buy real estate.",
+        "The show's public site is natashagraziano.com.",
+    ],
     "ksr": [
         'Matt Jones and the Kentucky Sports Radio crew cover University of Kentucky athletics on weekdays from 10 to noon.',
         'This feed is the on-demand version of that Sports Talk 790 broadcast, split into hours the way the show ran.',
