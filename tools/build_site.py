@@ -629,54 +629,180 @@ def load():
     return shows
 
 
-def write_pages(shows):
-    cards = []
-    for show in shows:
-        hay = " ".join([
-            show["title"],
-            show.get("host") or "",
-            show["publisher"],
-            show["category"],
-            show["description"],
-        ]).lower()
-        flag = '<span class="flag">Explicit</span>' if show.get("explicit") else ""
-        cards.append(f'''<a class="card" href="podcasts/{esc(show["slug"])}/" data-cat="{esc(show["category"])}" data-hay="{esc(hay)}">
-          {sleeve(show)}
-          <div class="card-body">
-            <span class="cat">{esc(show["category"])}</span>
-            <h2>{esc(show["title"])}{flag}</h2>
-            <p class="host">{esc(show["publisher"])}</p>
-          </div>
-        </a>''')
-    present = {show["category"] for show in shows}
-    chips = ['<button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>']
+def cat_slug(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def show_card(show, href):
+    flag = '<span class="flag">Explicit</span>' if show.get("explicit") else ""
+    return (
+        f'<a class="card" href="{esc(href)}">'
+        f"{sleeve(show)}"
+        '<div class="card-body">'
+        f'<span class="cat">{esc(show["category"])}</span>'
+        f'<h2>{esc(show["title"])}{flag}</h2>'
+        f'<p class="host">{esc(show["publisher"])}</p>'
+        "</div></a>"
+    )
+
+
+TOP_LISTEN = [
+    "the-daily",
+    "up-first",
+    "pod-save-america",
+    "serial",
+    "this-american-life",
+    "radiolab",
+    "crime-junkie",
+    "my-favorite-murder",
+    "dateline-nbc",
+    "smartless",
+    "conan-obrien-needs-a-friend",
+    "the-joe-rogan-experience",
+    "hardcore-history",
+    "99-percent-invisible",
+    "stuff-you-should-know",
+    "darknet-diaries",
+    "the-vergecast",
+    "reply-all",
+    "freakonomics-radio",
+    "planet-money",
+    "ted-radio-hour",
+    "how-i-built-this-with-guy-raz",
+]
+LISTEN_SHELVES = [
+    ("News", ["the-daily", "up-first", "pod-save-america", "serial", "today-explained", "the-npr-politics-podcast", "pod-save-the-world", "the-journal", "embedded", "consider-this"]),
+    ("Comedy", ["smartless", "conan-obrien-needs-a-friend", "the-joe-rogan-experience", "wtf-with-marc-maron", "armchair-expert", "wait-wait-dont-tell-me", "good-hang", "las-culturistas", "my-brother-my-brother-and-me", "call-her-daddy"]),
+    ("True crime", ["crime-junkie", "my-favorite-murder", "dateline-nbc", "casefile", "20-20", "dateline-originals", "morbid", "crime-stories-with-nancy-grace", "true-crime-all-the-time", "crime-junkie"]),
+    ("Technology", ["darknet-diaries", "the-vergecast", "reply-all", "hard-fork", "decoder", "cortex", "the-talk-show", "accidental-tech-podcast", "syntax", "wave-form"]),
+]
+
+
+def pick_shows(shows, seeds, limit, category=None):
+    found = {s["slug"]: s for s in shows}
+    chosen = []
+    seen = set()
+    for slug in seeds:
+        show = found.get(slug)
+        if not show or slug in seen:
+            continue
+        if category and show["category"] != category:
+            continue
+        chosen.append(show)
+        seen.add(slug)
+        if len(chosen) == limit:
+            return chosen
+    pool = [s for s in shows if s["slug"] not in seen and (not category or s["category"] == category)]
+    pool.sort(key=lambda s: (not s.get("handwritten"), s["title"].lower()))
+    for show in pool:
+        chosen.append(show)
+        if len(chosen) == limit:
+            break
+    return chosen
+
+
+def render_shelves(shows):
+    present = []
+    seen = set()
     for cat in CATS:
-        if cat in present:
-            chips.append(f'<button type="button" class="chip" data-filter="{esc(cat)}" aria-pressed="false">{esc(cat)}</button>')
-    for cat in sorted(present - set(CATS)):
-        chips.append(f'<button type="button" class="chip" data-filter="{esc(cat)}" aria-pressed="false">{esc(cat)}</button>')
+        if any(s["category"] == cat for s in shows) and cat not in seen:
+            present.append(cat)
+            seen.add(cat)
+    for show in shows:
+        if show["category"] not in seen:
+            present.append(show["category"])
+            seen.add(show["category"])
+    chips = [f'<a class="chip" href="categories/{cat_slug(cat)}/">{esc(cat)}</a>' for cat in present]
+    top = pick_shows(shows, TOP_LISTEN, 20)
+    shelves = [(label, pick_shows(shows, seeds, 10, category=label)) for label, seeds in LISTEN_SHELVES]
+    shown = len(top) + sum(len(rows) for _label, rows in shelves)
+    if shown > 80:
+        raise SystemExit(f"home card cap {shown}")
+    blocks = []
+    blocks.append(
+        '<section class="shelf" aria-labelledby="top-listen">'
+        '<div class="shelf-head"><h2 id="top-listen">Top Listen</h2></div>'
+        '<div class="home-rail">'
+        + "".join(show_card(s, "podcasts/" + s["slug"] + "/") for s in top)
+        + "</div></section>"
+    )
+    for label, rows in shelves:
+        slug = cat_slug(label)
+        blocks.append(
+            f'<section class="shelf" aria-labelledby="shelf-{slug}">'
+            f'<div class="shelf-head"><h2 id="shelf-{slug}">{esc(label)}</h2>'
+            f'<a class="see-all" href="categories/{slug}/">See all</a></div>'
+            '<div class="home-rail">'
+            + "".join(show_card(s, "podcasts/" + s["slug"] + "/") for s in rows)
+            + "</div></section>"
+        )
     home = head(HOME_TITLE, HOME_DESC, 0, "home") + f'''
 <main id="content">
   <section class="hero wrap">
     <p class="kicker">On air · Browse only · No player</p>
     <h1>Find the show.<br>Follow their feed.</h1>
-    <p class="lede">Hundreds of shows, one shelf. Artwork and titles point at the real podcasts. The audio stays on each publisher’s feed. Nothing here is for sale.</p>
+    <p class="lede">Hundreds of shows, a few shelves. Artwork and titles point at the real podcasts. The audio stays on each publisher’s feed. Nothing here is for sale.</p>
     <div class="tools">
       <label class="search">
         <input id="q" type="search" placeholder="Search shows, hosts, topics" autocomplete="off">
         <span id="count">{len(shows)}</span>
       </label>
-      <div class="filters" role="group" aria-label="Categories">{''.join(chips)}</div>
+      <div class="filters" role="navigation" aria-label="Categories">{''.join(chips)}</div>
     </div>
   </section>
   <section class="wrap">
     <p class="meta-row"><span>Catalog checked {FETCHED} ET</span><span>Official links only</span></p>
-    <div class="grid" id="grid">{''.join(cards)}</div>
-    <p class="empty" id="empty">No shows match that search. Try another name or clear the filter.</p>
+    <ul class="search-hits" id="hits" hidden></ul>
+    <p class="empty" id="empty">No shows match that search. Open a category for the full list.</p>
+    <div id="shelves">{''.join(blocks)}</div>
   </section>
 </main>
 ''' + FOOT.format(prefix="", extra='<script src="js/catalog.js"></script>')
     (ROOT / "index.html").write_text(home)
+    rows = [{"t": s["title"], "s": s["slug"], "c": s["category"], "h": s.get("publisher") or ""} for s in shows]
+    (ROOT / "search.json").write_text(json.dumps(rows, ensure_ascii=False, separators=(",", ":")))
+
+    cat_root = ROOT / "categories"
+    cat_root.mkdir(exist_ok=True)
+    keep = {cat_slug(cat) for cat in present}
+    for child in list(cat_root.iterdir()):
+        if child.is_dir() and child.name not in keep:
+            shutil.rmtree(child)
+    grouped = {cat: [] for cat in present}
+    for show in shows:
+        grouped.setdefault(show["category"], []).append(show)
+    for cat in present:
+        mine = sorted(grouped.get(cat, []), key=lambda s: s["title"].lower())
+        if not mine:
+            continue
+        slug = cat_slug(cat)
+        cards = "".join(show_card(s, "../../podcasts/" + s["slug"] + "/") for s in mine)
+        page = head(
+            f"{cat} podcasts | Where to Listen",
+            f"Every {cat} show in this browse-only catalog. This site does not host episodes.",
+            2,
+            "",
+        )
+        page += f'''
+<main id="content" class="page">
+  <div class="wrap">
+    <a class="back" href="../../index.html">Back to the shelf</a>
+    <p class="kicker">Category</p>
+    <h1 class="show-title">{esc(cat)}</h1>
+    <p class="lede">{len(mine)} shows. Where to Listen does not host episodes. Open a show, then follow the publisher’s feed.</p>
+    <div class="grid">{cards}</div>
+  </div>
+</main>
+''' + FOOT.format(prefix="../../", extra="")
+        folder = cat_root / slug
+        folder.mkdir(exist_ok=True)
+        (folder / "index.html").write_text(page)
+    print("HOME", home.count('class="card"'), "cards;", "categories", len(present))
+
+
+
+def write_pages(shows):
+    render_shelves(shows)
 
     about_desc = "Notes on this browse-only podcast catalog. Show pages were built from publisher feeds. This site does not host episodes."
     about = head("About | Where to Listen", about_desc, 0, "about") + f'''
@@ -924,7 +1050,7 @@ python3 tools/fetch_feed_copy.py
 python3 tools/build_site.py
 ```
 
-`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `404.html`, and `podcasts/{{slug}}/index.html`.
+`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html` (curated shelves), `categories/{{slug}}/index.html` for each full category, `about.html`, `404.html`, and `podcasts/{{slug}}/index.html`.
 
 ## GitHub Pages
 
@@ -980,8 +1106,9 @@ def audit(shows):
     if (ROOT / ".nojekyll").exists():
         problems.append(".nojekyll still exists")
     slugs = {show["slug"] for show in shows}
-    if len(pages) != len(shows) + 3:
-        problems.append(f"page count {len(pages)} expected {len(shows) + 3}")
+    pod_pages = [p for p in pages if "/podcasts/" in str(p)]
+    if len(pod_pages) != len(shows):
+        problems.append(f"podcast page count {len(pod_pages)} expected {len(shows)}")
     home = (ROOT / "index.html").read_text()
     if f"<title>{HOME_TITLE}</title>" not in home:
         problems.append("home title mismatch")
@@ -994,8 +1121,22 @@ def audit(shows):
         pass
     if 'href="shows/' in home:
         problems.append("home still links to shows/")
-    if home.count('href="podcasts/') < len(shows):
-        problems.append("home missing podcast links")
+    home_cards = home.count('class="card"')
+    if home_cards > 80 or home_cards < 20:
+        problems.append(f"home cards {home_cards}")
+    if 'id="shelves"' not in home:
+        problems.append("home shelves missing")
+    cat_pages = sorted((ROOT / "categories").glob("*/index.html"))
+    if len(cat_pages) < 4:
+        problems.append("category pages missing")
+    linked = set()
+    for page_path in cat_pages:
+        blob = page_path.read_text()
+        if 'content="noindex"' not in blob or 'rel="canonical" href="./"' not in blob:
+            problems.append(f"category head {page_path.parent.name}")
+        linked.update(re.findall(r'href="../../podcasts/([^"/]+)/"', blob))
+    if linked != slugs:
+        problems.append(f"category coverage {len(linked)} vs {len(slugs)}")
     banned_schema = ("PodcastEpisode", "Product", "Offer", "Review", "aggregateRating")
     stub_hits = 0
     for show in shows:
@@ -1058,7 +1199,13 @@ def audit(shows):
 
 
 def main():
+    import sys
     shows = load()
+    if "--shelves-only" in sys.argv:
+        render_shelves(shows)
+        audit(shows)
+        print(f"shelves {len(shows)} shows")
+        return
     write_config()
     public = write_pages(shows)
     write_credits(public)
