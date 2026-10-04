@@ -1231,6 +1231,17 @@ def visible_text(page):
     return text
 
 
+# Header wordmark is permanently findthispodcast (no .com). Do not put "Where to Listen" back in the header.
+# Page titles still say Where to Listen.
+WORDMARK = '<strong>findthis<span class="accent">podcast</span></strong>'
+OLD_WORDMARK = '<strong>Where to <span class="accent">Listen</span></strong>'
+
+
+def check_wordmark(page, label, problems):
+    if WORDMARK not in page or OLD_WORDMARK in page:
+        problems.append(f"wordmark {label}")
+
+
 def audit(shows):
     problems = []
     pages = [ROOT / "index.html", ROOT / "about.html", ROOT / "about" / "index.html", ROOT / "404.html"]
@@ -1311,8 +1322,7 @@ def audit(shows):
             problems.append(f"title dot {show['slug']}")
         if show["slug"] not in slugs:
             problems.append(f"slug {show['slug']}")
-        if "findthispodcast" in page.lower():
-            problems.append(f"domain {show['slug']}")
+        check_wordmark(page, show["slug"], problems)
         check_anchors(page, show["slug"], problems)
     dale = next((show for show in shows if show["title"] == "The Dale Jr. Download"), None)
     if dale and re.search(r"the dale jr on\b", dale.get("description") or "", re.I):
@@ -1322,8 +1332,7 @@ def audit(shows):
         problems.append("about/ missing noindex or canonical")
     if 'href="../css/site.css"' not in about_page:
         problems.append("about/ asset path")
-    if "findthispodcast" in about_page.lower():
-        problems.append("domain about")
+    check_wordmark(about_page, "about/", problems)
     check_anchors(about_page, "about", problems)
     covered = re.findall(r'href="(?:\.\./)*podcasts/([^"/]+)/"', home)
     home_paths = [ROOT / "index.html"]
@@ -1381,8 +1390,9 @@ def audit(shows):
         page = (ROOT / name).read_text()
         if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
             problems.append(f"public head {name}")
-        if "atulit" in page.lower() or "findthispodcast" in page.lower():
+        if "atulit" in page.lower():
             problems.append(f"brand {name}")
+        check_wordmark(page, name, problems)
         check_anchors(page, name, problems)
         visible = visible_text(page)
         visible = re.sub(r"the dale jr\.?\s+download", "", visible, flags=re.I)
