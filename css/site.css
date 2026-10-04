@@ -211,7 +211,26 @@ html[data-theme="dark"] .knob::after { transform: translateX(14px); }
   color: var(--accent);
   white-space: nowrap;
 }
-.cat-index { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 1.5rem; }
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.55rem 0 0.8rem;
+}
+.pager a, .pager span[aria-current="page"] {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.28rem 0.55rem;
+  color: var(--muted);
+}
+.pager span[aria-current="page"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pager-count { border: 0; color: var(--faint); padding-left: 0.2rem; }
+.cat-index { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.2rem 0 1.5rem; }
 .cat-index a {
   text-decoration: none;
   border: 1px solid var(--line);
