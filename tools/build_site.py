@@ -617,7 +617,7 @@ def head(title, description, depth, current):
   <div class="wrap head-inner">
     <a class="brand" href="{prefix}index.html">
       {MARK}
-      <span class="brand-copy"><small>88.0 · Shelf</small><strong>Where to <span class="accent">Listen</span></strong></span>
+      <span class="brand-copy"><small>88.0 · Shelf</small><strong>findthis<span class="accent">podcast</span></strong></span>
     </a>
     <nav class="nav" aria-label="Primary">
       <a href="{prefix}index.html"{nav_home}>Shelf</a>
@@ -645,15 +645,16 @@ FOOT = """<footer class="site-foot">
 """
 
 
-def sleeve(show, lazy=False):
+def sleeve(show, lazy=False, category=None):
     art = show.get("artwork") or ""
     img = ""
     if art:
         extra = ' loading="lazy" decoding="async"' if lazy else ""
         img = f'<img src="{esc(art)}" alt=""{extra} referrerpolicy="no-referrer" onerror="this.remove()">'
+    badge = f'      <span class="cat cat-on-art">{esc(category)}</span>\n' if category else ""
     return f'''<div class="sleeve" style="--hue:{hue(show["slug"])}">
       {img}
-      <span class="initials" aria-hidden="true">{esc(initials(show["title"]))}</span>
+{badge}      <span class="initials" aria-hidden="true">{esc(initials(show["title"]))}</span>
     </div>'''
 
 
@@ -727,9 +728,8 @@ def card_html(show, href, lazy=True):
     ]).lower()
     flag = '<span class="flag">Explicit</span>' if show.get("explicit") else ""
     return f'''<a class="card" href="{esc(href)}" data-cat="{esc(show["category"])}" data-hay="{esc(hay)}">
-          {sleeve(show, lazy=lazy)}
+          {sleeve(show, lazy=lazy, category=show["category"])}
           <div class="card-body">
-            <span class="cat">{esc(show["category"])}</span>
             <h2>{esc(show["title"])}{flag}</h2>
             <p class="host">{esc(show["publisher"])}</p>
           </div>
@@ -1231,6 +1231,17 @@ def visible_text(page):
     return text
 
 
+# Header wordmark is permanently findthispodcast (no .com). Do not put "Where to Listen" back in the header.
+# Page titles still say Where to Listen.
+WORDMARK = '<strong>findthis<span class="accent">podcast</span></strong>'
+OLD_WORDMARK = '<strong>Where to <span class="accent">Listen</span></strong>'
+
+
+def check_wordmark(page, label, problems):
+    if WORDMARK not in page or OLD_WORDMARK in page:
+        problems.append(f"wordmark {label}")
+
+
 def audit(shows):
     problems = []
     pages = [ROOT / "index.html", ROOT / "about.html", ROOT / "about" / "index.html", ROOT / "404.html"]
@@ -1261,8 +1272,7 @@ def audit(shows):
         problems.append(f"home dumps catalog ({home_cards} cards)")
     if 'class="pager"' not in home or 'rel="next"' not in home:
         problems.append("home pager")
-    if '<strong>Where to <span class="accent">Listen</span></strong>' not in home or "findthispodcast" in home.lower():
-        problems.append("wordmark")
+    check_wordmark(home, "home", problems)
     css = (ROOT / "css/site.css").read_text()
     if "clamp(3.1rem, 8vw, 6.2rem)" in css:
         problems.append("hero heading still full size")
@@ -1311,8 +1321,7 @@ def audit(shows):
             problems.append(f"title dot {show['slug']}")
         if show["slug"] not in slugs:
             problems.append(f"slug {show['slug']}")
-        if "findthispodcast" in page.lower():
-            problems.append(f"domain {show['slug']}")
+        check_wordmark(page, show["slug"], problems)
         check_anchors(page, show["slug"], problems)
     dale = next((show for show in shows if show["title"] == "The Dale Jr. Download"), None)
     if dale and re.search(r"the dale jr on\b", dale.get("description") or "", re.I):
@@ -1322,8 +1331,7 @@ def audit(shows):
         problems.append("about/ missing noindex or canonical")
     if 'href="../css/site.css"' not in about_page:
         problems.append("about/ asset path")
-    if "findthispodcast" in about_page.lower():
-        problems.append("domain about")
+    check_wordmark(about_page, "about/", problems)
     check_anchors(about_page, "about", problems)
     covered = re.findall(r'href="(?:\.\./)*podcasts/([^"/]+)/"', home)
     home_paths = [ROOT / "index.html"]
@@ -1358,8 +1366,7 @@ def audit(shows):
                 problems.append(f"category page size {cat} {count}")
             if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
                 problems.append(f"category head {cat}")
-            if "findthispodcast" in page.lower():
-                problems.append(f"domain {cat}")
+            check_wordmark(page, f"category {cat}", problems)
             check_anchors(page, f"category {cat}", problems)
         if found != expected:
             problems.append(f"category cards {cat} {found} != {expected}")
@@ -1381,8 +1388,9 @@ def audit(shows):
         page = (ROOT / name).read_text()
         if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
             problems.append(f"public head {name}")
-        if "atulit" in page.lower() or "findthispodcast" in page.lower():
+        if "atulit" in page.lower():
             problems.append(f"brand {name}")
+        check_wordmark(page, name, problems)
         check_anchors(page, name, problems)
         visible = visible_text(page)
         visible = re.sub(r"the dale jr\.?\s+download", "", visible, flags=re.I)
