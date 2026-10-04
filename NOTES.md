@@ -19,7 +19,7 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 
 ## Design
 
-Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. A waveform sits in the wordmark, which stays “Where to Listen”. The home page is a short hero plus 48 shows at a time. Numbered pages under `page/{n}/` hold the rest of the catalog. Category pages use the same page size. No custom domain is configured.
+Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Full lists live on category pages, which use numbered pages when a category is longer than 48 shows. There is no numbered `page/2` dump on the home. No custom domain is configured.
 
 ## Theme toggle
 
@@ -43,7 +43,7 @@ python3 tools/fetch_feed_copy.py
 python3 tools/build_site.py
 ```
 
-`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `page/{n}/index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{slug}/index.html`, and `podcasts/{slug}/index.html`.
+`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{slug}/index.html`, `categories/{slug}/page/{n}/index.html` when a category needs another page, and `podcasts/{slug}/index.html`.
 
 ## GitHub Pages
 

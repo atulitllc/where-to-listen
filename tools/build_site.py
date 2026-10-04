@@ -36,8 +36,7 @@ CATS = [
     "Society",
     "Kids",
 ]
-# Home shows a short Top Listen shelf plus a few category shelves.
-# Every other show stays on its category page.
+# Home is curated shelves only. Full lists live on category pages.
 TOP_LISTEN = [
     "The Daily",
     "Crime Junkie",
@@ -53,9 +52,10 @@ TOP_LISTEN = [
     "The Bill Simmons Podcast",
 ]
 SHELF_CATS = ["True crime", "Comedy", "News", "Sports"]
-SHELF_LIMIT = 8
-# First paint stays small. The rest of the catalog is numbered pages.
+SHELF_LIMIT = 12
+# Category pages stay paged so a long list does not freeze the browser.
 PAGE_SIZE = 48
+WORDMARK = '<strong>findthis<span class="accent">podcast</span></strong>'
 # Readable slugs for titles whose old slugs were leftovers (show, show-3, lin, 101).
 # Every other slug already in the catalog stays frozen.
 REPLACED_SLUGS = {
@@ -215,6 +215,14 @@ HAND = {
     "Tony Evans' Sermons - Audio": [
         "The Urban Alternative is the national ministry of Dr. Tony Evans. It is dedicated to restoring hope and transforming lives through the proclamation and application of the Word of God.",
         "This audio series collects his sermons. Dr. Tony Evans is the publisher named on the catalog, and the shelf files the show under Society.",
+    ],
+    "Coffee Break French": [
+        "Mark and the Radio Lingua team teach French in lessons short enough to finish with a cup of coffee.",
+        "Early seasons start from zero. Later seasons add the phrases you need once you can already order a drink and ask for directions.",
+    ],
+    "Coffee Break Spanish": [
+        "Radio Lingua’s Spanish lessons are built to replay on a commute, one short chapter at a time.",
+        "The opening season stays with greetings and everyday questions. Later seasons assume you can already hold a simple conversation.",
     ],
 }
 
@@ -490,11 +498,15 @@ def pack_paragraphs(kept):
 def apply_copy(show, kept):
     paragraphs = pack_paragraphs(kept)
     if not paragraphs:
-        latest = strip_feed_text(show.get("latestTitle") or "")
-        if latest:
-            paragraphs = [f"A recent episode is titled “{latest}”."]
+        host = strip_feed_text(show.get("host") or "")
+        publisher = strip_feed_text(show.get("publisher") or "")
+        title = show["title"]
+        if host and host.lower() not in title.lower():
+            paragraphs = [f"{title} is hosted by {host}."]
+        elif publisher and publisher.lower() not in title.lower():
+            paragraphs = [f"{title} comes from {publisher}."]
         else:
-            paragraphs = [show["title"] + "."]
+            paragraphs = [f"{title} is part of the {show['category']} catalog."]
     show["paragraphs"] = paragraphs
     show["description"] = "\n\n".join(paragraphs)
     first = sentences(paragraphs[0])
@@ -515,15 +527,28 @@ def finalize_descriptions(shows):
             key = bare_sentence(sentence, show)
             if len(key) >= 24:
                 counts[key] += 1
+    # A line shared by two shows is dropped when that show still has its own
+    # sentence. The first show that would otherwise be empty keeps the line.
+    claimed = set()
     for show in shows:
-        kept = []
+        unique = []
+        shared = []
         for sentence in prepared[id(show)]:
-            key = bare_sentence(sentence, show)
-            if len(key) >= 24 and counts[key] > 1:
-                continue
             if re.search(r"part of the .{0,40} podcast network", sentence, re.I):
                 continue
-            kept.append(sentence)
+            key = bare_sentence(sentence, show)
+            if len(key) >= 24 and counts[key] > 1:
+                shared.append((key, sentence))
+            else:
+                unique.append(sentence)
+        kept = list(unique)
+        if not kept:
+            for key, sentence in shared:
+                if key in claimed:
+                    continue
+                claimed.add(key)
+                kept.append(sentence)
+                break
         apply_copy(show, kept)
 
 
@@ -617,7 +642,7 @@ def head(title, description, depth, current):
   <div class="wrap head-inner">
     <a class="brand" href="{prefix}index.html">
       {MARK}
-      <span class="brand-copy"><small>88.0 · Shelf</small><strong>Where to <span class="accent">Listen</span></strong></span>
+      <span class="brand-copy"><small>88.0 · Shelf</small>{WORDMARK}</span>
     </a>
     <nav class="nav" aria-label="Primary">
       <a href="{prefix}index.html"{nav_home}>Shelf</a>
@@ -645,15 +670,17 @@ FOOT = """<footer class="site-foot">
 """
 
 
-def sleeve(show, lazy=False):
+def sleeve(show, lazy=False, label=""):
     art = show.get("artwork") or ""
     img = ""
     if art:
         extra = ' loading="lazy" decoding="async"' if lazy else ""
         img = f'<img src="{esc(art)}" alt=""{extra} referrerpolicy="no-referrer" onerror="this.remove()">'
+    badge = f'<span class="cat">{esc(label)}</span>' if label else ""
     return f'''<div class="sleeve" style="--hue:{hue(show["slug"])}">
       {img}
       <span class="initials" aria-hidden="true">{esc(initials(show["title"]))}</span>
+      {badge}
     </div>'''
 
 
@@ -727,9 +754,8 @@ def card_html(show, href, lazy=True):
     ]).lower()
     flag = '<span class="flag">Explicit</span>' if show.get("explicit") else ""
     return f'''<a class="card" href="{esc(href)}" data-cat="{esc(show["category"])}" data-hay="{esc(hay)}">
-          {sleeve(show, lazy=lazy)}
+          {sleeve(show, lazy=lazy, label=show["category"])}
           <div class="card-body">
-            <span class="cat">{esc(show["category"])}</span>
             <h2>{esc(show["title"])}{flag}</h2>
             <p class="host">{esc(show["publisher"])}</p>
           </div>
@@ -783,72 +809,67 @@ def listing_cards(batch, podcast_prefix):
     return "".join(cards)
 
 
-def write_pages(shows):
-    cats = ordered_categories(shows)
-    total_pages = page_count(len(shows))
+def write_home(shows, cats):
+    page_root = ROOT / "page"
+    if page_root.exists():
+        shutil.rmtree(page_root)
+    for stale in (ROOT / "js" / "home-index.js", ROOT / "js" / "home.js", ROOT / "search.json"):
+        if stale.exists():
+            stale.unlink()
 
-    def home_href(current, number):
-        if current == 1:
-            return "./" if number == 1 else f"page/{number}/"
-        if number == 1:
-            return "../../"
-        return f"../{number}/"
+    by_title = {}
+    for show in shows:
+        by_title.setdefault(show["title"].lower(), show)
+    top = [by_title[title.lower()] for title in TOP_LISTEN if title.lower() in by_title]
+    top_slugs = {show["slug"] for show in top}
+
+    shelves = []
+    seen = 0
+    top_cards = []
+    for show in top:
+        top_cards.append(card_html(show, f"podcasts/{show['slug']}/", lazy=seen >= 8))
+        seen += 1
+    shelves.append(shelf_block("Top Listen", top_cards))
+    for cat in SHELF_CATS:
+        members = [show for show in shows if show["category"] == cat and show["slug"] not in top_slugs]
+        cards = []
+        for show in members[:SHELF_LIMIT]:
+            cards.append(card_html(show, f"podcasts/{show['slug']}/", lazy=seen >= 8))
+            seen += 1
+        shelves.append(shelf_block(cat, cards, see_all=f"categories/{cat_slug(cat)}/"))
 
     cat_links = []
     for cat in cats:
         count = sum(1 for show in shows if show["category"] == cat)
         cat_links.append(f'<a href="categories/{esc(cat_slug(cat))}/">{esc(cat)} <span>{count}</span></a>')
     cat_nav = f'<nav class="cat-index" aria-label="Categories">{"".join(cat_links)}</nav>'
-
-    for number in range(1, total_pages + 1):
-        batch = shows[(number - 1) * PAGE_SIZE:number * PAGE_SIZE]
-        depth = 0 if number == 1 else 2
-        prefix = "../" * depth
-        podcast_prefix = f"{prefix}podcasts/"
-        title = HOME_TITLE if number == 1 else f"Podcast catalog, page {number} | Where to Listen"
-        desc = HOME_DESC if number == 1 else f"Page {number} of the podcast catalog. Links go to each show’s own feed. This site does not host episodes."
-        lede = f"{len(shows)} shows, {PAGE_SIZE} per page. Each card opens that show. The audio stays on the publisher’s feed."
-        body = head(title, desc, depth, "home") + f'''
+    home = head(HOME_TITLE, HOME_DESC, 0, "home") + f'''
 <main id="content">
   <section class="hero wrap">
     <p class="kicker">On air · Browse only · No player</p>
     <h1>Find the show.<br>Follow their feed.</h1>
-    <p class="lede">{esc(lede)}</p>
+    <p class="lede">A short Top Listen shelf and a few popular categories. Full lists live on the category pages. Each card opens that show. The audio stays on the publisher’s feed.</p>
     <div class="tools">
       <label class="search">
-        <input id="q" type="search" placeholder="Search this page" autocomplete="off">
-        <span id="count">{len(batch)}</span>
+        <input id="q" type="search" placeholder="Search these shelves" autocomplete="off">
+        <span id="count">{seen}</span>
       </label>
     </div>
   </section>
   <section class="wrap">
-    <p class="meta-row"><span>Page {number} of {total_pages}</span><span>Catalog checked {FETCHED} ET</span></p>
-    {pager_html(number, total_pages, lambda n, current=number: home_href(current, n))}
-    <div class="grid" id="grid">{listing_cards(batch, podcast_prefix)}</div>
-    <p class="empty" id="empty">No shows on this page match that search.</p>
-    {pager_html(number, total_pages, lambda n, current=number: home_href(current, n))}
-    {cat_nav.replace('href="categories/', f'href="{prefix}categories/')}
+    <p class="meta-row"><span>{seen} shows on the home shelves</span><span>Catalog checked {FETCHED} ET</span></p>
+    {''.join(shelves)}
+    <p class="empty" id="empty">No shows on these shelves match that search.</p>
+    {cat_nav}
   </section>
 </main>
-''' + FOOT.format(prefix=prefix, extra=f'<script src="{prefix}js/catalog.js"></script>')
-        if number == 1:
-            (ROOT / "index.html").write_text(body)
-        else:
-            folder = ROOT / "page" / str(number)
-            folder.mkdir(parents=True, exist_ok=True)
-            (folder / "index.html").write_text(body)
+''' + FOOT.format(prefix="", extra='<script src="js/catalog.js"></script>')
+    (ROOT / "index.html").write_text(home)
 
-    page_root = ROOT / "page"
-    page_root.mkdir(exist_ok=True)
-    keep_nums = {str(n) for n in range(2, total_pages + 1)}
-    for child in list(page_root.iterdir()):
-        if child.is_dir() and child.name not in keep_nums:
-            shutil.rmtree(child)
-        elif child.is_file():
-            child.unlink()
-    for stale in (ROOT / "js" / "home-index.js", ROOT / "js" / "home.js"):
-        if stale.exists():
-            stale.unlink()
+
+def write_pages(shows):
+    cats = ordered_categories(shows)
+    write_home(shows, cats)
 
     about_desc = "Notes on this browse-only podcast catalog. Show pages were built from publisher feeds. This site does not host episodes."
     about_body = f'''
@@ -1144,7 +1165,7 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 
 ## Design
 
-Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. A waveform sits in the wordmark, which stays “Where to Listen”. The home page is a short hero plus 48 shows at a time. Numbered pages under `page/{{n}}/` hold the rest of the catalog. Category pages use the same page size. No custom domain is configured.
+Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Full lists live on category pages, which use numbered pages when a category is longer than {PAGE_SIZE} shows. There is no numbered `page/2` dump on the home. No custom domain is configured.
 
 ## Theme toggle
 
@@ -1168,7 +1189,7 @@ python3 tools/fetch_feed_copy.py
 python3 tools/build_site.py
 ```
 
-`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `page/{{n}}/index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{{slug}}/index.html`, and `podcasts/{{slug}}/index.html`.
+`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{{slug}}/index.html`, `categories/{{slug}}/page/{{n}}/index.html` when a category needs another page, and `podcasts/{{slug}}/index.html`.
 
 ## GitHub Pages
 
@@ -1257,12 +1278,26 @@ def audit(shows):
     if 'href="shows/' in home:
         problems.append("home still links to shows/")
     home_cards = home.count('class="card"')
-    if home_cards > PAGE_SIZE or home_cards == 0:
-        problems.append(f"home dumps catalog ({home_cards} cards)")
-    if 'class="pager"' not in home or 'rel="next"' not in home:
+    if home_cards < 48 or home_cards > 64:
+        problems.append(f"home shelf size {home_cards}")
+    if home.count(">See all<") < len(SHELF_CATS):
+        problems.append("see all")
+    if ">Top Listen<" not in home:
+        problems.append("top listen")
+    for title in TOP_LISTEN:
+        if esc(title) not in home:
+            problems.append(f"top missing {title}")
+    for cat in SHELF_CATS:
+        if f'href="categories/{cat_slug(cat)}/"' not in home:
+            problems.append(f"see all {cat}")
+    if 'class="pager"' in home or re.search(r'href="page/\d+/', home):
         problems.append("home pager")
-    if '<strong>Where to <span class="accent">Listen</span></strong>' not in home or "findthispodcast" in home.lower():
+    if (ROOT / "page").exists():
+        problems.append("numbered home pages")
+    if WORDMARK not in home or "findthispodcast.com" in home.lower():
         problems.append("wordmark")
+    if home.count('<span class="cat">') < home_cards:
+        problems.append("home badges")
     css = (ROOT / "css/site.css").read_text()
     if "clamp(3.1rem, 8vw, 6.2rem)" in css:
         problems.append("hero heading still full size")
@@ -1311,8 +1346,10 @@ def audit(shows):
             problems.append(f"title dot {show['slug']}")
         if show["slug"] not in slugs:
             problems.append(f"slug {show['slug']}")
-        if "findthispodcast" in page.lower():
-            problems.append(f"domain {show['slug']}")
+        if WORDMARK not in page or "findthispodcast.com" in page.lower():
+            problems.append(f"wordmark {show['slug']}")
+        if re.search(r"a recent episode is titled", show.get("description") or "", re.I):
+            problems.append(f"episode template {show['slug']}")
         check_anchors(page, show["slug"], problems)
     dale = next((show for show in shows if show["title"] == "The Dale Jr. Download"), None)
     if dale and re.search(r"the dale jr on\b", dale.get("description") or "", re.I):
@@ -1322,24 +1359,9 @@ def audit(shows):
         problems.append("about/ missing noindex or canonical")
     if 'href="../css/site.css"' not in about_page:
         problems.append("about/ asset path")
-    if "findthispodcast" in about_page.lower():
-        problems.append("domain about")
+    if WORDMARK not in about_page or "findthispodcast.com" in about_page.lower():
+        problems.append("wordmark about")
     check_anchors(about_page, "about", problems)
-    covered = re.findall(r'href="(?:\.\./)*podcasts/([^"/]+)/"', home)
-    home_paths = [ROOT / "index.html"]
-    home_paths.extend(sorted((ROOT / "page").glob("*/index.html"), key=lambda path: int(path.parent.name)))
-    if len(home_paths) != page_count(len(shows)):
-        problems.append(f"home page count {len(home_paths)}")
-    for path in home_paths:
-        text = path.read_text()
-        count = text.count('class="card"')
-        if count > PAGE_SIZE or count == 0:
-            problems.append(f"page size {path.parent.name} {count}")
-        if 'content="noindex"' not in text or 'rel="canonical" href="./"' not in text:
-            problems.append(f"page head {path}")
-        covered.extend(re.findall(r'href="(?:\.\./)*podcasts/([^"/]+)/"', text))
-    if set(covered) != slugs or len(set(covered)) != len(shows):
-        problems.append(f"home pages cover {len(set(covered))} of {len(shows)}")
     for cat in ordered_categories(shows):
         folder = ROOT / "categories" / cat_slug(cat)
         path = folder / "index.html"
@@ -1358,18 +1380,25 @@ def audit(shows):
                 problems.append(f"category page size {cat} {count}")
             if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
                 problems.append(f"category head {cat}")
-            if "findthispodcast" in page.lower():
-                problems.append(f"domain {cat}")
+            if WORDMARK not in page or "findthispodcast.com" in page.lower():
+                problems.append(f"wordmark {cat}")
+            if page.count('<span class="cat">') < count:
+                problems.append(f"badges {cat}")
             check_anchors(page, f"category {cat}", problems)
         if found != expected:
             problems.append(f"category cards {cat} {found} != {expected}")
         first = path.read_text()
         if 'href="../../css/site.css"' not in first:
             problems.append(f"category css {cat}")
+    lang_bare = re.compile(
+        r"\b(french|spanish|italian|german|portuguese|chinese|japanese|korean|arabic|persian|english)\b",
+        re.I,
+    )
     skeletons = Counter()
     for show in shows:
         for sentence in sentences(show.get("description") or ""):
             bare = re.sub(re.escape(show["title"]), " ", sentence, flags=re.I) if show.get("title") else sentence
+            bare = lang_bare.sub("lang", bare)
             bare = re.sub(r"\s+", " ", bare).strip().lower()
             if len(bare) >= 30:
                 skeletons[bare] += 1
@@ -1381,7 +1410,7 @@ def audit(shows):
         page = (ROOT / name).read_text()
         if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
             problems.append(f"public head {name}")
-        if "atulit" in page.lower() or "findthispodcast" in page.lower():
+        if "atulit" in page.lower() or "findthispodcast.com" in page.lower() or WORDMARK not in page:
             problems.append(f"brand {name}")
         check_anchors(page, name, problems)
         visible = visible_text(page)

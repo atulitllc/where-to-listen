@@ -108,11 +108,11 @@ html[data-theme="dark"] .brand-copy .accent { color: #5EEAD4; }
   color: var(--faint);
 }
 .brand-copy strong {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 1.7rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.28rem;
+  letter-spacing: -0.04em;
+  text-transform: none;
   color: #6D4AD4;
 }
 html[data-theme="dark"] .brand-copy strong { color: #C4B5FD; }
@@ -319,6 +319,17 @@ html[data-theme="dark"] .knob::after { transform: translateX(14px); }
   overflow: hidden;
 }
 .sleeve img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sleeve .cat {
+  position: absolute;
+  z-index: 2;
+  top: 0.45rem;
+  left: 0.45rem;
+  background: rgba(20, 16, 12, 0.78);
+  color: #fff;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  line-height: 1.2;
+}
 .initials {
   position: absolute; inset: 0;
   display: grid; place-items: center;
