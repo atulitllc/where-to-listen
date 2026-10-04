@@ -536,7 +536,7 @@ def head(title, description, depth, current):
   <div class="wrap head-inner">
     <a class="brand" href="{prefix}index.html">
       {MARK}
-      <span class="brand-copy"><small>88.0 · Shelf</small><strong>Where to <span class="accent">Listen</span></strong></span>
+      <span class="brand-copy"><small>88.0 · Shelf</small><strong>findthis<span class="accent">podcast</span></strong></span>
     </a>
     <nav class="nav" aria-label="Primary">
       <a href="{prefix}index.html"{nav_home}>Shelf</a>
