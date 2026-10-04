@@ -818,7 +818,7 @@ def write_pages(shows):
     <p>On {FETCHED} the shelf was filled from publisher RSS feeds. Public podcast charts were used only to find those feed addresses, then discarded. Each page keeps the show title, the feed URL, the artwork address already published in that feed, a description written for this catalog, and the title of the latest episode. The Podcast Index API was not called. No Podcast Index response is stored here, and show pages do not carry a Podcast Index credit.</p>
     <p>Artwork is hotlinked from that feed address. The image bytes are not copied into this site. If a publisher would rather not be hotlinked, the picture should be removed and the monogram left in its place. Feeds are linked so you can subscribe in your own app.</p>
     <h2>A note on Podcast Index</h2>
-    <p>Podcast Index (<a href="https://podcastindex.org/">podcastindex.org</a>) is an open podcast directory with a developer API. Their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark.</p>
+    <p>Podcast Index (<a href="https://podcastindex.org/" target="_blank" rel="noopener noreferrer">podcastindex.org</a>) is an open podcast directory with a developer API. Their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark.</p>
     <h2>Indexing</h2>
     <p>Every page on this demo sends a <code>noindex</code> robots meta tag and a relative canonical URL of <code>./</code>. Show pages live at <code>podcasts/&#123;slug&#125;/</code>.</p>
   </article>
@@ -899,8 +899,8 @@ def write_pages(shows):
         </div>
         {episode}
         <div class="actions">
-          {('<a class="btn primary" href="' + esc(show["site"]) + '" rel="noopener noreferrer">Official site <span class="ext">External</span></a>') if show.get("site") else ""}
-          <a class="btn" href="{esc(show["feed"])}" rel="noopener noreferrer">Official RSS feed <span class="ext">External</span></a>
+          {('<a class="btn primary" href="' + esc(show["site"]) + '" target="_blank" rel="noopener noreferrer">Official site <span class="ext">External</span></a>') if show.get("site") else ""}
+          <a class="btn" href="{esc(show["feed"])}" target="_blank" rel="noopener noreferrer">Official RSS feed <span class="ext">External</span></a>
         </div>
         <p class="fine">Where to Listen does not host this show. Subscribe in your own podcast app with the feed, or listen where the publisher says to listen. Artwork is loaded from the image address in that same feed.</p>
       </div>
