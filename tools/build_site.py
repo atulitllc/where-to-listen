@@ -1305,7 +1305,13 @@ def audit(shows):
 
 
 def main():
+    import sys
     shows = load()
+    if "--shelves-only" in sys.argv:
+        render_shelves(shows)
+        audit(shows)
+        print(f"shelves {len(shows)} shows")
+        return
     write_config()
     public = write_pages(shows)
     write_credits(public)
