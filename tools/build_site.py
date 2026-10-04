@@ -817,7 +817,6 @@ def head(title, description, depth, current, path):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{esc(description)}">
-<meta name="robots" content="noindex">
 <link rel="canonical" href="{esc(canonical)}">
 <meta property="og:url" content="{esc(canonical)}">
 <title>{esc(title)}</title>
@@ -1102,7 +1101,7 @@ def write_pages(shows):
     <h2>A note on Podcast Index</h2>
     <p>Podcast Index (<a href="https://podcastindex.org/" target="_blank" rel="noopener noreferrer">podcastindex.org</a>) is an open podcast directory with a developer API. Their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark.</p>
     <h2>Indexing</h2>
-    <p>Every page on this demo sends a <code>noindex</code> robots meta tag and an absolute canonical URL on the apex host, with the trailing slash that page already uses. Show pages live at <code>podcasts/&#123;slug&#125;/</code>.</p>
+    <p>Pages are open to search engines. Each one uses an absolute canonical URL on the apex host, with the trailing slash that page already uses. Show pages live at <code>podcasts/&#123;slug&#125;/</code>.</p>
   </article>
 </main>
 '''
@@ -1396,7 +1395,7 @@ Every page has a Light / Dark control in the header.
 
 ## SEO
 
-Every HTML page includes `<meta name="robots" content="noindex">`, `<link rel="canonical">`, and `<meta property="og:url">`. Those URLs are absolute `{SITE_ORIGIN}` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `{SITE_ORIGIN}/`. A show page uses `{SITE_ORIGIN}/podcasts/{{slug}}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
+No HTML page sends a sitewide `noindex`. Every page includes `<link rel="canonical">` and `<meta property="og:url">`. Those URLs are absolute `{SITE_ORIGIN}` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `{SITE_ORIGIN}/`. A show page uses `{SITE_ORIGIN}/podcasts/{{slug}}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
 Each page has a `WebSite` node whose `url` is `{SITE_ORIGIN}/` and a `WebPage` node whose `url` is that page. A show page also has one `PodcastSeries` node whose `url` is the absolute show page and whose `webFeed` is that show’s publisher RSS.
 The home title is `{HOME_TITLE}`. Each show title is `{{Show name}} | Where to Listen`.
 Show URLs are `podcasts/{{slug}}/` with a trailing slash.
@@ -1529,7 +1528,7 @@ def ld_nodes(page):
 def check_seo(page, path, label, problems, series=False):
     url = absolute_url(path)
     origin = absolute_url("/")
-    if page.count('content="noindex"') != 1:
+    if 'content="noindex"' in page or 'name="robots"' in page:
         problems.append(f"noindex {label}")
     canonicals = re.findall(r'<link rel="canonical" href="([^"]*)">', page)
     if canonicals != [url]:
@@ -1732,6 +1731,8 @@ def audit(shows):
         text = html_path.read_text(errors="ignore")
         if 'rel="canonical" href="./"' in text:
             problems.append(f"relative canonical {html_path.relative_to(ROOT)}")
+        if 'content="noindex"' in text or 'name="robots"' in text:
+            problems.append(f"noindex {html_path.relative_to(ROOT)}")
     if stub_hits:
         problems.append(f"stubs {stub_hits}")
     if problems:
