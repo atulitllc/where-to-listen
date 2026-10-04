@@ -18,12 +18,12 @@ Option A: a microphone with three sound rings that shift from purple on the left
 | Capsule | `#A78BFA` → `#7C3AED` | Microphone body |
 | Cradle | `#A78BFA` | Yoke and stem |
 | Foot | `#C4B5FD` | Base bar |
-| Words | `#8B6CF6` | “findthis” |
-| Accent | `#2DD4BF` | “podcast” |
+| Words | `#8B6CF6` | “Where to” |
+| Accent | `#2DD4BF` | “Listen” |
 | Night ground (recommended) | `#12141A` | Preview only; SVGs are transparent |
 
 Outer rings step down in opacity (0.95 / 0.62 / 0.34) so the microphone stays the mark.
 
-Wordmark is the domain name `findthispodcast` (no .com), set in Outfit. Purple and mint both read on the light shelf and the dark shelf. The microphone mark is unchanged.
+Wordmark is Outfit, the site’s text face. Purple and mint both read on the light shelf and the dark shelf.
 
 Favicon is this mark on a `#14121C` squircle.
