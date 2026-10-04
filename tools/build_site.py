@@ -1101,7 +1101,7 @@ def write_pages(shows):
     <h2>A note on Podcast Index</h2>
     <p>Podcast Index (<a href="https://podcastindex.org/" target="_blank" rel="noopener noreferrer">podcastindex.org</a>) is an open podcast directory with a developer API. Their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark.</p>
     <h2>Indexing</h2>
-    <p>Pages are open to search engines. Each one uses an absolute canonical URL on the apex host, with the trailing slash that page already uses. Show pages live at <code>podcasts/&#123;slug&#125;/</code>.</p>
+    <p>Pages are open to search engines. Each one uses an absolute canonical URL on the apex host, with the trailing slash that page already uses. Show pages live at <code>podcasts/&#123;slug&#125;/</code>. The sitemap lists the home page, each category hub, and each show page.</p>
   </article>
 </main>
 '''
@@ -1396,6 +1396,7 @@ Every page has a Light / Dark control in the header.
 ## SEO
 
 No HTML page sends a sitewide `noindex`. Every page includes `<link rel="canonical">` and `<meta property="og:url">`. Those URLs are absolute `{SITE_ORIGIN}` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `{SITE_ORIGIN}/`. A show page uses `{SITE_ORIGIN}/podcasts/{{slug}}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
+`sitemap.xml` lists indexable URLs only: the home page, each category hub (`/categories/{{slug}}/`, not numbered `page/n` lists), and each podcast show page. Every `<loc>` is `{SITE_ORIGIN}/...`. `robots.txt` names it with `Sitemap: {SITE_ORIGIN}/sitemap.xml`.
 Each page has a `WebSite` node whose `url` is `{SITE_ORIGIN}/` and a `WebPage` node whose `url` is that page. A show page also has one `PodcastSeries` node whose `url` is the absolute show page and whose `webFeed` is that show’s publisher RSS.
 The home title is `{HOME_TITLE}`. Each show title is `{{Show name}} | Where to Listen`.
 Show URLs are `podcasts/{{slug}}/` with a trailing slash.
@@ -1407,7 +1408,7 @@ python3 tools/fetch_feed_copy.py
 python3 tools/build_site.py
 ```
 
-`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{{slug}}/index.html`, `categories/{{slug}}/page/{{n}}/index.html` when a category needs another page, and `podcasts/{{slug}}/index.html`.
+`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{{slug}}/index.html`, `categories/{{slug}}/page/{{n}}/index.html` when a category needs another page, `podcasts/{{slug}}/index.html`, `sitemap.xml`, and `robots.txt`.
 
 ## GitHub Pages
 
@@ -1552,6 +1553,97 @@ def check_seo(page, path, label, problems, series=False):
         if not isinstance(node_url, str) or not node_url.startswith(origin):
             problems.append(f"relative schema {label}")
             break
+
+
+def indexable_paths(shows):
+    """Home, category hubs, and show pages. Not pagination, about, or the 404."""
+    paths = ["/"]
+    for cat in ordered_categories(shows):
+        paths.append(f"/categories/{cat_slug(cat)}/")
+    for show in shows:
+        paths.append(f"/podcasts/{show['slug']}/")
+    return paths
+
+
+def sitemap_locs(shows):
+    locs = []
+    origin = SITE_ORIGIN.rstrip("/")
+    for path in indexable_paths(shows):
+        url = absolute_url(path)
+        parsed = urllib.parse.urlparse(url)
+        if parsed.scheme != "https" or parsed.netloc != "findthispodcast.com":
+            raise SystemExit(f"sitemap loc is not the apex: {url}")
+        if not url.startswith(origin + "/"):
+            raise SystemExit(f"sitemap loc is not the apex: {url}")
+        if "github.io" in url or "://www." in url:
+            raise SystemExit(f"sitemap loc uses a non-apex host: {url}")
+        locs.append(url)
+    return locs
+
+
+def write_sitemap(shows):
+    locs = sitemap_locs(shows)
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    for url in locs:
+        lines.append("  <url>")
+        lines.append(f"    <loc>{html.escape(url, quote=False)}</loc>")
+        lines.append("  </url>")
+    lines.append("</urlset>")
+    lines.append("")
+    (ROOT / "sitemap.xml").write_text("\n".join(lines))
+    return locs
+
+
+def write_robots():
+    sitemap = absolute_url("/sitemap.xml")
+    (ROOT / "robots.txt").write_text(
+        "User-agent: *\n"
+        "Allow: /\n"
+        "\n"
+        f"Sitemap: {sitemap}\n"
+    )
+
+
+def audit_sitemap(shows, problems):
+    sitemap_path = ROOT / "sitemap.xml"
+    robots_path = ROOT / "robots.txt"
+    if not sitemap_path.exists():
+        problems.append("missing sitemap.xml")
+        return
+    if not robots_path.exists():
+        problems.append("missing robots.txt")
+        return
+    locs = re.findall(r"<loc>([^<]*)</loc>", sitemap_path.read_text())
+    expected = sitemap_locs(shows)
+    if locs != expected:
+        problems.append(f"sitemap locs {len(locs)} != {len(expected)}")
+    for loc in locs:
+        parsed = urllib.parse.urlparse(loc)
+        if parsed.scheme != "https" or parsed.netloc != "findthispodcast.com":
+            problems.append(f"sitemap host {loc}")
+            break
+        if "github.io" in loc or "://www." in loc or "/page/" in loc:
+            problems.append(f"sitemap excluded url {loc}")
+            break
+    if absolute_url("/") not in locs:
+        problems.append("sitemap missing home")
+    for cat in ordered_categories(shows):
+        hub = absolute_url(f"/categories/{cat_slug(cat)}/")
+        if hub not in locs:
+            problems.append(f"sitemap missing hub {cat}")
+            break
+    show_loc = absolute_url("/podcasts/keeping-families-connected/")
+    if show_loc not in locs:
+        problems.append("sitemap missing Keeping Families Connected")
+    robots = robots_path.read_text()
+    wanted = f"Sitemap: {absolute_url('/sitemap.xml')}"
+    if wanted not in robots.splitlines():
+        problems.append("robots sitemap line")
+    if "github.io" in robots or "www.findthispodcast.com" in robots:
+        problems.append("robots host")
 
 
 def audit(shows):
@@ -1735,6 +1827,7 @@ def audit(shows):
             problems.append(f"noindex {html_path.relative_to(ROOT)}")
     if stub_hits:
         problems.append(f"stubs {stub_hits}")
+    audit_sitemap(shows, problems)
     if problems:
         print("AUDIT FAIL", len(problems))
         for item in problems[:40]:
@@ -1750,8 +1843,10 @@ def main():
     write_credits(public)
     write_notes(len(public))
     write_readme(len(public))
+    locs = write_sitemap(shows)
+    write_robots()
     audit(shows)
-    print(f"built {len(public)} shows")
+    print(f"built {len(public)} shows, sitemap {len(locs)} urls")
 
 
 if __name__ == "__main__":

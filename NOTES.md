@@ -35,6 +35,7 @@ Every page has a Light / Dark control in the header.
 ## SEO
 
 No HTML page sends a sitewide `noindex`. Every page includes `<link rel="canonical">` and `<meta property="og:url">`. Those URLs are absolute `https://findthispodcast.com` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `https://findthispodcast.com/`. A show page uses `https://findthispodcast.com/podcasts/{slug}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
+`sitemap.xml` lists indexable URLs only: the home page, each category hub (`/categories/{slug}/`, not numbered `page/n` lists), and each podcast show page. Every `<loc>` is `https://findthispodcast.com/...`. `robots.txt` names it with `Sitemap: https://findthispodcast.com/sitemap.xml`.
 Each page has a `WebSite` node whose `url` is `https://findthispodcast.com/` and a `WebPage` node whose `url` is that page. A show page also has one `PodcastSeries` node whose `url` is the absolute show page and whose `webFeed` is that show’s publisher RSS.
 The home title is `Podcast catalog | Where to Listen`. Each show title is `{Show name} | Where to Listen`.
 Show URLs are `podcasts/{slug}/` with a trailing slash.
@@ -46,7 +47,7 @@ python3 tools/fetch_feed_copy.py
 python3 tools/build_site.py
 ```
 
-`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{slug}/index.html`, `categories/{slug}/page/{n}/index.html` when a category needs another page, and `podcasts/{slug}/index.html`.
+`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `about/index.html`, `404.html`, `categories/{slug}/index.html`, `categories/{slug}/page/{n}/index.html` when a category needs another page, `podcasts/{slug}/index.html`, `sitemap.xml`, and `robots.txt`.
 
 ## GitHub Pages
 
