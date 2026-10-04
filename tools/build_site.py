@@ -670,17 +670,15 @@ FOOT = """<footer class="site-foot">
 """
 
 
-def sleeve(show, lazy=False, label=""):
+def sleeve(show, lazy=False):
     art = show.get("artwork") or ""
     img = ""
     if art:
         extra = ' loading="lazy" decoding="async"' if lazy else ""
         img = f'<img src="{esc(art)}" alt=""{extra} referrerpolicy="no-referrer" onerror="this.remove()">'
-    badge = f'<span class="cat">{esc(label)}</span>' if label else ""
     return f'''<div class="sleeve" style="--hue:{hue(show["slug"])}">
       {img}
       <span class="initials" aria-hidden="true">{esc(initials(show["title"]))}</span>
-      {badge}
     </div>'''
 
 
@@ -754,7 +752,7 @@ def card_html(show, href, lazy=True):
     ]).lower()
     flag = '<span class="flag">Explicit</span>' if show.get("explicit") else ""
     return f'''<a class="card" href="{esc(href)}" data-cat="{esc(show["category"])}" data-hay="{esc(hay)}">
-          {sleeve(show, lazy=lazy, label=show["category"])}
+          {sleeve(show, lazy=lazy)}
           <div class="card-body">
             <h2>{esc(show["title"])}{flag}</h2>
             <p class="host">{esc(show["publisher"])}</p>
@@ -854,13 +852,13 @@ def write_home(shows, cats):
         <input id="q" type="search" placeholder="Search these shelves" autocomplete="off">
         <span id="count">{seen}</span>
       </label>
+      {cat_nav}
     </div>
   </section>
   <section class="wrap">
     <p class="meta-row"><span>{seen} shows on the home shelves</span><span>Catalog checked {FETCHED} ET</span></p>
     {''.join(shelves)}
     <p class="empty" id="empty">No shows on these shelves match that search.</p>
-    {cat_nav}
   </section>
 </main>
 ''' + FOOT.format(prefix="", extra='<script src="js/catalog.js"></script>')
@@ -1305,8 +1303,13 @@ def audit(shows):
         problems.append("numbered home pages")
     if WORDMARK not in home or "findthispodcast.com" in home.lower():
         problems.append("wordmark")
-    if home.count('<span class="cat">') < home_cards:
+    if '<span class="cat">' in home:
         problems.append("home badges")
+    search_at = home.find('id="q"')
+    chips_at = home.find('class="cat-index"')
+    top_at = home.find(">Top Listen<")
+    if search_at < 0 or chips_at < 0 or top_at < 0 or not (search_at < chips_at < top_at):
+        problems.append("category chips")
     css = (ROOT / "css/site.css").read_text()
     if "clamp(3.1rem, 8vw, 6.2rem)" in css:
         problems.append("hero heading still full size")
@@ -1391,7 +1394,7 @@ def audit(shows):
                 problems.append(f"category head {cat}")
             if WORDMARK not in page or "findthispodcast.com" in page.lower():
                 problems.append(f"wordmark {cat}")
-            if page.count('<span class="cat">') < count:
+            if '<span class="cat">' in page:
                 problems.append(f"badges {cat}")
             check_anchors(page, f"category {cat}", problems)
         if found != expected:
