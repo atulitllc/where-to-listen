@@ -12,6 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from slug_copy import SLUG_COPY
+
 ROOT = Path(__file__).resolve().parents[1]
 ET = ZoneInfo("America/New_York")
 FETCHED = "Oct 3, 2026"
@@ -184,10 +186,6 @@ HAND = {
         "Defected Radio is the long-running house-music show from Defected Records.",
         "Guest mixes and label sessions are the heart of the series. Defected is the publisher, and the shelf files the show under Music.",
     ],
-    "Shots Fired in Anger": [
-        "Shots Fired in Anger is a series from Geissele Automatics.",
-        "The publisher’s site and RSS are the way off this page. The shelf files the show under Technology.",
-    ],
     "Soder": [
         "Soder is Dan Soder’s comedy show.",
         "The Audioboom channel is the official home listed on the feed. The shelf files the series under Comedy.",
@@ -195,10 +193,6 @@ HAND = {
     "Skill Up": [
         "Skill Up is a culture show from the game critic of the same name.",
         "Episodes talk through games and the industry around them. The shelf files the series under Culture.",
-    ],
-    "GOONS": [
-        "GOONS is a culture series. The publisher name on the feed is The Goons Podcast.",
-        "This page collects that feed and the category so the show is easy to find. The shelf files it under Culture.",
     ],
     "The Martyr Made Podcast": [
         "The Martyr Made Podcast is Darryl Cooper’s long-form history series.",
@@ -486,9 +480,12 @@ def trim_sentence(sentence):
 
 def candidate_sentences(show):
     chunks = []
-    # Handwritten pages stay on that copy. Feed summaries cut on words like
-    # "download" and were turning titles such as The Dale Jr. Download into scraps.
-    if show["title"] in HAND:
+    # Slug copy replaces thin feed leftovers. Handwritten pages stay on that
+    # copy. Feed summaries cut on words like "download" and were turning titles
+    # such as The Dale Jr. Download into scraps.
+    if show.get("slug") in SLUG_COPY:
+        chunks.extend(SLUG_COPY[show["slug"]])
+    elif show["title"] in HAND:
         chunks.extend(HAND[show["title"]])
     else:
         handwritten = good_blurb(show.get("blurb") or "") if show.get("handwritten") else ""
