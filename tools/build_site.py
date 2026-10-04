@@ -59,6 +59,8 @@ SHELF_LIMIT = 10
 # Category pages stay paged so a long list does not freeze the browser.
 PAGE_SIZE = 48
 WORDMARK = '<strong>findthis<span class="accent">podcast</span></strong>'
+# Public apex. Canonical, WebSite, page schema, and og:url all use this origin.
+SITE_ORIGIN = "https://findthispodcast.com"
 # Narrative was the thin shelf. Keep the home row on shows people already know.
 SHELF_FIRST = {
     "Narrative": [
@@ -781,10 +783,34 @@ def related_shows(show, shows):
     return chosen
 
 
-def head(title, description, depth, current):
+def absolute_url(path):
+    if not path.startswith("/"):
+        path = "/" + path
+    return SITE_ORIGIN + path
+
+
+def ld_script(data):
+    payload = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
+    return f'<script type="application/ld+json">{payload}</script>'
+
+
+def head(title, description, depth, current, path):
     prefix = "../" * depth
     nav_home = ' aria-current="page"' if current == "home" else ""
     nav_about = ' aria-current="page"' if current == "about" else ""
+    canonical = absolute_url(path)
+    website = ld_script({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Where to Listen",
+        "url": absolute_url("/"),
+    })
+    webpage = ld_script({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": title,
+        "url": canonical,
+    })
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -792,7 +818,8 @@ def head(title, description, depth, current):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{esc(description)}">
 <meta name="robots" content="noindex">
-<link rel="canonical" href="./">
+<link rel="canonical" href="{esc(canonical)}">
+<meta property="og:url" content="{esc(canonical)}">
 <title>{esc(title)}</title>
 <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -800,6 +827,8 @@ def head(title, description, depth, current):
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{prefix}css/site.css">
 {BOOT}
+{website}
+{webpage}
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
@@ -852,6 +881,7 @@ def json_ld(show):
         "@context": "https://schema.org",
         "@type": "PodcastSeries",
         "name": show["title"],
+        "url": absolute_url(f"/podcasts/{show['slug']}/"),
         "description": show["sentence"],
         "webFeed": show["feed"],
     }
@@ -861,8 +891,7 @@ def json_ld(show):
         data["author"] = {"@type": "Organization", "name": show["publisher"]}
     if show.get("language"):
         data["inLanguage"] = show["language"]
-    payload = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
-    return f'<script type="application/ld+json">{payload}</script>'
+    return ld_script(data)
 
 
 def load():
@@ -1029,7 +1058,7 @@ def write_home(shows, cats):
         count = sum(1 for show in shows if show["category"] == cat)
         cat_links.append(f'<a href="categories/{esc(cat_slug(cat))}/">{esc(cat)} <span>{count}</span></a>')
     cat_nav = f'<nav class="cat-index" aria-label="Categories">{"".join(cat_links)}</nav>'
-    home = head(HOME_TITLE, HOME_DESC, 0, "home") + f'''
+    home = head(HOME_TITLE, HOME_DESC, 0, "home", "/") + f'''
 <main id="content">
   <section class="hero wrap">
     <p class="kicker">On air · Browse only · No player</p>
@@ -1073,16 +1102,16 @@ def write_pages(shows):
     <h2>A note on Podcast Index</h2>
     <p>Podcast Index (<a href="https://podcastindex.org/" target="_blank" rel="noopener noreferrer">podcastindex.org</a>) is an open podcast directory with a developer API. Their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark.</p>
     <h2>Indexing</h2>
-    <p>Every page on this demo sends a <code>noindex</code> robots meta tag and a relative canonical URL of <code>./</code>. Show pages live at <code>podcasts/&#123;slug&#125;/</code>.</p>
+    <p>Every page on this demo sends a <code>noindex</code> robots meta tag and an absolute canonical URL on the apex host, with the trailing slash that page already uses. Show pages live at <code>podcasts/&#123;slug&#125;/</code>.</p>
   </article>
 </main>
 '''
-    (ROOT / "about.html").write_text(head("About | Where to Listen", about_desc, 0, "about") + about_body + FOOT.format(prefix="", extra=""))
+    (ROOT / "about.html").write_text(head("About | Where to Listen", about_desc, 0, "about", "/about/") + about_body + FOOT.format(prefix="", extra=""))
     about_dir = ROOT / "about"
     about_dir.mkdir(exist_ok=True)
-    (about_dir / "index.html").write_text(head("About | Where to Listen", about_desc, 1, "about") + about_body + FOOT.format(prefix="../", extra=""))
+    (about_dir / "index.html").write_text(head("About | Where to Listen", about_desc, 1, "about", "/about/") + about_body + FOOT.format(prefix="../", extra=""))
 
-    missing = head("Page not found | Where to Listen", "That page is not on this shelf. This site does not host episodes.", 0, "") + '''
+    missing = head("Page not found | Where to Listen", "That page is not on this shelf. This site does not host episodes.", 0, "", "/404.html") + '''
 <main id="content" class="page">
   <article class="wrap prose">
     <p class="kicker">Off the dial</p>
@@ -1122,7 +1151,8 @@ def write_pages(shows):
             prefix = "../" * depth
             desc = f"Browse {cat} podcasts. Links go to each show’s own feed. This site does not host episodes."
             title = f"{cat} podcasts | Where to Listen" if number == 1 else f"{cat} podcasts, page {number} | Where to Listen"
-            page = head(title, desc, depth, "") + f'''
+            public_path = f"/categories/{slug}/" if number == 1 else f"/categories/{slug}/page/{number}/"
+            page = head(title, desc, depth, "", public_path) + f'''
 <main id="content" class="page">
   <section class="wrap">
     <a class="back" href="{prefix}index.html">← Back to the shelf</a>
@@ -1205,7 +1235,7 @@ def write_pages(shows):
             related.append(
                 f'<li><a href="../{esc(other["slug"])}/"><strong>{esc(other["title"])}</strong><span>{esc(other["publisher"])}</span></a></li>'
             )
-        page = head(f"{show['title']} | Where to Listen", f"{show['sentence']} {SHOW_SUFFIX}", 2, "")
+        page = head(f"{show['title']} | Where to Listen", f"{show['sentence']} {SHOW_SUFFIX}", 2, "", f"/podcasts/{show['slug']}/")
         page = page.replace("</head>", json_ld(show) + "\n</head>", 1)
         page += f'''
 <main id="content" class="page">
@@ -1353,7 +1383,7 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 
 ## Design
 
-Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Category chips sit under the search box. Full lists live on category pages, which use numbered pages when a category is longer than {PAGE_SIZE} shows. There is no numbered `page/2` dump on the home. No custom domain is configured.
+Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Category chips sit under the search box. Full lists live on category pages, which use numbered pages when a category is longer than {PAGE_SIZE} shows. There is no numbered `page/2` dump on the home. The public host is https://findthispodcast.com. HTTPS redirects sit in front of Pages.
 
 ## Theme toggle
 
@@ -1366,9 +1396,10 @@ Every page has a Light / Dark control in the header.
 
 ## SEO
 
-Every HTML page includes `<meta name="robots" content="noindex">` and `<link rel="canonical" href="./">`.
+Every HTML page includes `<meta name="robots" content="noindex">`, `<link rel="canonical">`, and `<meta property="og:url">`. Those URLs are absolute `{SITE_ORIGIN}` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `{SITE_ORIGIN}/`. A show page uses `{SITE_ORIGIN}/podcasts/{{slug}}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
+Each page has a `WebSite` node whose `url` is `{SITE_ORIGIN}/` and a `WebPage` node whose `url` is that page. A show page also has one `PodcastSeries` node whose `url` is the absolute show page and whose `webFeed` is that show’s publisher RSS.
 The home title is `{HOME_TITLE}`. Each show title is `{{Show name}} | Where to Listen`.
-Show URLs are `podcasts/{{slug}}/` with a trailing slash. Each show page has one `PodcastSeries` JSON-LD block whose `webFeed` is that show’s publisher RSS.
+Show URLs are `podcasts/{{slug}}/` with a trailing slash.
 
 ## Rebuild
 
@@ -1476,6 +1507,52 @@ OLD_WORDMARK = '<strong>Where to <span class="accent">Listen</span></strong>'
 def check_wordmark(page, label, problems):
     if WORDMARK not in page or OLD_WORDMARK in page:
         problems.append(f"wordmark {label}")
+        return
+    cleaned = re.sub(r'<link rel="canonical" href="[^"]*">', "", page)
+    cleaned = re.sub(r'<meta property="og:url" content="[^"]*">', "", cleaned)
+    cleaned = re.sub(r'<script type="application/ld\+json">.*?</script>', "", cleaned, flags=re.S)
+    if "findthispodcast.com" in cleaned.lower():
+        problems.append(f"wordmark {label}")
+
+
+def ld_nodes(page):
+    nodes = []
+    for blob in re.findall(r'<script type="application/ld\+json">(.*?)</script>', page, flags=re.S):
+        data = json.loads(blob)
+        if isinstance(data, dict) and isinstance(data.get("@graph"), list):
+            nodes.extend(data["@graph"])
+        elif isinstance(data, dict):
+            nodes.append(data)
+    return nodes
+
+
+def check_seo(page, path, label, problems, series=False):
+    url = absolute_url(path)
+    origin = absolute_url("/")
+    if page.count('content="noindex"') != 1:
+        problems.append(f"noindex {label}")
+    canonicals = re.findall(r'<link rel="canonical" href="([^"]*)">', page)
+    if canonicals != [url]:
+        problems.append(f"canonical {label}")
+    og_urls = re.findall(r'<meta property="og:url" content="([^"]*)">', page)
+    if og_urls != [url]:
+        problems.append(f"og:url {label}")
+    nodes = ld_nodes(page)
+    websites = [node for node in nodes if node.get("@type") == "WebSite"]
+    if len(websites) != 1 or websites[0].get("url") != origin:
+        problems.append(f"website url {label}")
+    pages = [node for node in nodes if node.get("@type") == "WebPage"]
+    if len(pages) != 1 or pages[0].get("url") != url:
+        problems.append(f"schema url {label}")
+    if series:
+        shows = [node for node in nodes if node.get("@type") == "PodcastSeries"]
+        if len(shows) != 1 or shows[0].get("url") != url:
+            problems.append(f"series url {label}")
+    for node in nodes:
+        node_url = node.get("url")
+        if not isinstance(node_url, str) or not node_url.startswith(origin):
+            problems.append(f"relative schema {label}")
+            break
 
 
 def audit(shows):
@@ -1486,16 +1563,16 @@ def audit(shows):
         problems.append("shows/ directory still exists")
     if (ROOT / ".nojekyll").exists():
         problems.append(".nojekyll still exists")
-    if (ROOT / "CNAME").exists():
-        problems.append("CNAME still exists")
+    cname = (ROOT / "CNAME").read_text().strip() if (ROOT / "CNAME").exists() else ""
+    if cname != "findthispodcast.com":
+        problems.append("CNAME")
     slugs = {show["slug"] for show in shows}
     if len(pages) != len(shows) + 4:
         problems.append(f"page count {len(pages)} expected {len(shows) + 4}")
     home = (ROOT / "index.html").read_text()
     if f"<title>{HOME_TITLE}</title>" not in home:
         problems.append("home title mismatch")
-    if 'content="noindex"' not in home or 'rel="canonical" href="./"' not in home:
-        problems.append("home robots/canonical")
+    check_seo(home, "/", "home", problems)
     if HOME_DESC not in home:
         problems.append("home meta description")
     if 'href="shows/' in home or "shows/" in re.sub(r"<[^>]+>", " ", home):
@@ -1520,8 +1597,7 @@ def audit(shows):
         problems.append("home pager")
     if (ROOT / "page").exists():
         problems.append("numbered home pages")
-    if WORDMARK not in home or "findthispodcast.com" in home.lower():
-        problems.append("wordmark")
+    check_wordmark(home, "home", problems)
     if '<span class="cat">' in home:
         problems.append("home badges")
     search_at = home.find('id="q"')
@@ -1545,8 +1621,7 @@ def audit(shows):
         title = f"{show['title']} | Where to Listen"
         if f"<title>{html.escape(title)}</title>" not in page and f"<title>{title}</title>" not in page:
             problems.append(f"title {show['slug']}")
-        if page.count('content="noindex"') != 1 or 'rel="canonical" href="./"' not in page:
-            problems.append(f"robots {show['slug']}")
+        check_seo(page, f"/podcasts/{show['slug']}/", show["slug"], problems, series=True)
         if SHOW_SUFFIX not in page:
             problems.append(f"meta suffix {show['slug']}")
         if page.count('"@type": "PodcastSeries"') != 1 and page.count('"@type":"PodcastSeries"') != 1:
@@ -1577,8 +1652,7 @@ def audit(shows):
             problems.append(f"title dot {show['slug']}")
         if show["slug"] not in slugs:
             problems.append(f"slug {show['slug']}")
-        if WORDMARK not in page or "findthispodcast.com" in page.lower():
-            problems.append(f"wordmark {show['slug']}")
+        check_wordmark(page, show["slug"], problems)
         if re.search(r"a recent episode is titled", show.get("description") or "", re.I):
             problems.append(f"episode template {show['slug']}")
         check_anchors(page, show["slug"], problems)
@@ -1586,12 +1660,10 @@ def audit(shows):
     if dale and re.search(r"the dale jr on\b", dale.get("description") or "", re.I):
         problems.append("dale mangled")
     about_page = (ROOT / "about" / "index.html").read_text()
-    if 'content="noindex"' not in about_page or 'rel="canonical" href="./"' not in about_page:
-        problems.append("about/ missing noindex or canonical")
+    check_seo(about_page, "/about/", "about", problems)
     if 'href="../css/site.css"' not in about_page:
         problems.append("about/ asset path")
-    if WORDMARK not in about_page or "findthispodcast.com" in about_page.lower():
-        problems.append("wordmark about")
+    check_wordmark(about_page, "about", problems)
     check_anchors(about_page, "about", problems)
     for cat in ordered_categories(shows):
         folder = ROOT / "categories" / cat_slug(cat)
@@ -1609,10 +1681,12 @@ def audit(shows):
             found += count
             if count > PAGE_SIZE or count == 0:
                 problems.append(f"category page size {cat} {count}")
-            if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
-                problems.append(f"category head {cat}")
-            if WORDMARK not in page or "findthispodcast.com" in page.lower():
-                problems.append(f"wordmark {cat}")
+            if item.parent == folder:
+                public_path = f"/categories/{cat_slug(cat)}/"
+            else:
+                public_path = f"/categories/{cat_slug(cat)}/page/{item.parent.name}/"
+            check_seo(page, public_path, f"category {cat}", problems)
+            check_wordmark(page, cat, problems)
             if '<span class="cat">' in page:
                 problems.append(f"badges {cat}")
             check_anchors(page, f"category {cat}", problems)
@@ -1638,11 +1712,15 @@ def audit(shows):
         if count > 1:
             problems.append(f"shared skeleton x{count}: {bare[:90]}")
             break
-    for name in ("index.html", "about.html", "404.html"):
+    public_paths = {
+        "index.html": "/",
+        "about.html": "/about/",
+        "404.html": "/404.html",
+    }
+    for name, public_path in public_paths.items():
         page = (ROOT / name).read_text()
-        if 'content="noindex"' not in page or 'rel="canonical" href="./"' not in page:
-            problems.append(f"public head {name}")
-        if "atulit" in page.lower() or "findthispodcast.com" in page.lower() or WORDMARK not in page:
+        check_seo(page, public_path, name, problems)
+        if "atulit" in page.lower():
             problems.append(f"brand {name}")
         check_wordmark(page, name, problems)
         check_anchors(page, name, problems)
@@ -1650,6 +1728,10 @@ def audit(shows):
         visible = re.sub(r"the dale jr\.?\s+download", "", visible, flags=re.I)
         if re.search(r"download|torrent", visible, flags=re.I):
             problems.append(f"banned word {name}")
+    for html_path in ROOT.rglob("*.html"):
+        text = html_path.read_text(errors="ignore")
+        if 'rel="canonical" href="./"' in text:
+            problems.append(f"relative canonical {html_path.relative_to(ROOT)}")
     if stub_hits:
         problems.append(f"stubs {stub_hits}")
     if problems:

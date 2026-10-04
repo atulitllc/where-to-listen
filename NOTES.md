@@ -21,7 +21,7 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 
 ## Design
 
-Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Category chips sit under the search box. Full lists live on category pages, which use numbered pages when a category is longer than 48 shows. There is no numbered `page/2` dump on the home. No custom domain is configured.
+Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Category chips sit under the search box. Full lists live on category pages, which use numbered pages when a category is longer than 48 shows. There is no numbered `page/2` dump on the home. The public host is https://findthispodcast.com. HTTPS redirects sit in front of Pages.
 
 ## Theme toggle
 
@@ -34,9 +34,10 @@ Every page has a Light / Dark control in the header.
 
 ## SEO
 
-Every HTML page includes `<meta name="robots" content="noindex">` and `<link rel="canonical" href="./">`.
+Every HTML page includes `<meta name="robots" content="noindex">`, `<link rel="canonical">`, and `<meta property="og:url">`. Those URLs are absolute `https://findthispodcast.com` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `https://findthispodcast.com/`. A show page uses `https://findthispodcast.com/podcasts/{slug}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
+Each page has a `WebSite` node whose `url` is `https://findthispodcast.com/` and a `WebPage` node whose `url` is that page. A show page also has one `PodcastSeries` node whose `url` is the absolute show page and whose `webFeed` is that show’s publisher RSS.
 The home title is `Podcast catalog | Where to Listen`. Each show title is `{Show name} | Where to Listen`.
-Show URLs are `podcasts/{slug}/` with a trailing slash. Each show page has one `PodcastSeries` JSON-LD block whose `webFeed` is that show’s publisher RSS.
+Show URLs are `podcasts/{slug}/` with a trailing slash.
 
 ## Rebuild
 
