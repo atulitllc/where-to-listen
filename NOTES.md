@@ -4,7 +4,7 @@ Working title: **Where to Listen**. The folder and repository use the same name.
 
 ## What this is
 
-A static HTML mock of a browse-only podcast shelf: a home grid, one page per show, and an About page. There are 1194 shows. Traffic catalog only. No audio hosting and nothing for sale.
+A static HTML mock of a browse-only podcast shelf: a home grid, one page per show, and an About page. There are 1272 shows. Traffic catalog only. No audio hosting and nothing for sale.
 
 ## Data rules for this build
 
@@ -15,11 +15,12 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 - Outbound links are the official site and the official RSS only. Enclosure URLs were discarded and are not in the HTML.
 - Slugs already in the catalog stay frozen. Titles that had collapsed to `show`, `show-N`, `lin`, or `101` use a readable slug derived from the show name.
 - For Behind the Bastards, the newest item in the iHeart feed was a sibling show (“It Could Happen Here”). The page uses the newest item that is actually a Behind the Bastards episode.
-- Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top.
+- Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top. Checked again on Oct 4, 2026: that feed was still another Slate show.
+- On Oct 4, 2026, 78 narrative series were added from each publisher’s own RSS. New show pages use a multi-paragraph catalog essay. Flagship pages that were still a sentence or two use the same kind of essay. Other pages use sentences already in the publisher summary, packed into as many as five paragraphs when the summary is long enough.
 
 ## Design
 
-Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Full lists live on category pages, which use numbered pages when a category is longer than 48 shows. There is no numbered `page/2` dump on the home. No custom domain is configured.
+Modern listening room, not a bookshop and not an arcade. Warm paper in light mode, control-room black with an amber needle and a green on-air lamp in dark mode. The header wordmark reads findthispodcast. Page titles still say Where to Listen. The home page is a short hero plus curated shelves: Top Listen and a few popular categories, each with a See all link. Category chips sit under the search box. Full lists live on category pages, which use numbered pages when a category is longer than 48 shows. There is no numbered `page/2` dump on the home. No custom domain is configured.
 
 ## Theme toggle
 
