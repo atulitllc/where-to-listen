@@ -8,11 +8,11 @@ Where to Listen is a browse-only mock catalog. It does not host podcast audio.
 - Podcast Index API Terms of Service v1.1, section 5.5, prohibit scraping, building a database from, or keeping permanent copies of content returned by the APIs, and prohibit publicly displaying that API content unless the content owner or the law allows it. See https://github.com/Podcastindex-org/legal/blob/main/TermsOfService.md
 - Podcast Index’s public homepage says the core index is available for free, for any use (https://podcastindex.org/). That mission statement is not treated here as permission to store API responses. This site does not copy the Podcast Index database and does not present itself as a Podcast Index product or partner (API terms, section 7.3).
 - No episode enclosures, MP3s, or M4A files were downloaded or linked.
-- A core set of blurbs was written for this catalog. Additional descriptions are the opening of each show’s own feed summary, trimmed. Full feed HTML is not stored.
+- Descriptions are catalog copy edited for this shelf from publisher feed summaries. Full feed HTML is not stored. Show pages do not credit Podcast Index, because those pages were not filled from that API.
 
 ## What was used
 
-On Oct 3, 2026, public top-podcast charts were read only to discover feed URLs. Those chart payloads were not committed. Each publisher RSS was then read for channel title, feed URL, artwork URL (`itunes:image` or channel image), a shortened description, and one recent episode title and date. Podcast Index was not queried, because no free-plan API credentials were present, and a Podcast Index catalog dump is not in this repo.
+On Oct 3, 2026, public top-podcast charts were read only to discover feed URLs. Those chart payloads were not committed. Each publisher RSS was then read for channel title, feed URL, artwork URL (`itunes:image` or channel image), a description, the channel language tag, and one recent episode title and date. Podcast Index was not queried, because no free-plan API credentials were present, and a Podcast Index catalog dump is not in this repo.
 
 Artwork is hotlinked from the image URL the show’s feed already publishes for podcast apps and directories. Image files are not in this repository. If the image fails to load, the page shows a monogram.
 
@@ -1223,4 +1223,4 @@ Type is loaded from Google Fonts: Barlow Condensed, Outfit, and IBM Plex Mono. T
 
 ## Podcast Index, for a later refresh
 
-If credentials are present, a future refresh can query the Podcast Index API under its current terms and display whatever attribution their docs require. Do not commit API secrets. Do not store a permanent dump of API content if the terms still forbid it.
+If credentials are present, a future refresh can query the Podcast Index API under its current terms and display whatever attribution their docs require. Do not commit API secrets. Do not store a permanent dump of API content if the terms still forbid it. Do not add that credit on a show page unless that page’s data actually came from Podcast Index.

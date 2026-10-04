@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Notes on this browse-only podcast catalog. Show pages were built from publisher feeds. This site does not host episodes.">
 <meta name="robots" content="noindex">
 <link rel="canonical" href="./">
-<title>About · Where to Listen</title>
+<title>About | Where to Listen</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,19 +65,18 @@ try {
     <p>No episode audio, no embedded players, no copied MP3s, and no pirate mirrors. There is nothing for sale. Each show page links out to the publisher’s own website and to that show’s public RSS feed, labeled as external.</p>
     <p>The line called “last episode listed in the official feed” is a title and a date read from the publisher’s RSS. It is not a file, and it is not a promise that the feed still looks the same tomorrow.</p>
     <h2>Where the facts come from</h2>
-    <p>Podcast Index (<a href="https://podcastindex.org/">podcastindex.org</a>) is the open directory this shelf is built around. Their API is free, and their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called and no Podcast Index response is stored here. This is not a Podcast Index product and not a partner site.</p>
-    <p>On Oct 3, 2026 the shelf was filled from publisher RSS feeds. Public podcast charts were used only to find those feed addresses, then discarded. Each page keeps the show title, the feed URL, the artwork address already published in that feed, a short description, and the title of the latest episode. Hand-written notes are used where we had them. Otherwise the description is the opening of the show’s own feed summary, trimmed so the page does not dump feed HTML.</p>
+    <p>On Oct 3, 2026 the shelf was filled from publisher RSS feeds. Public podcast charts were used only to find those feed addresses, then discarded. Each page keeps the show title, the feed URL, the artwork address already published in that feed, a description written for this catalog, and the title of the latest episode. The Podcast Index API was not called. No Podcast Index response is stored here, and show pages do not carry a Podcast Index credit.</p>
     <p>Artwork is hotlinked from that feed address. The image bytes are not copied into this site. If a publisher would rather not be hotlinked, the picture should be removed and the monogram left in its place. Feeds are linked so you can subscribe in your own app.</p>
     <h2>A note on Podcast Index</h2>
-    <p>Podcast Index (<a href="https://podcastindex.org/">podcastindex.org</a>) is an open podcast directory with a developer API. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark. If API credentials are added later, a refresh should follow their current terms, including any required attribution, and should not keep a permanent copy of API content beyond what those terms allow.</p>
+    <p>Podcast Index (<a href="https://podcastindex.org/">podcastindex.org</a>) is an open podcast directory with a developer API. Their terms (section 5.5) say not to keep a permanent copy of content the API returns. No API key was available for this build, so the API was not called. This catalog is not a Podcast Index product, is not endorsed by them, and does not display their logo as a partner mark.</p>
     <h2>Indexing</h2>
-    <p>Every page on this demo sends a <code>noindex</code> robots meta tag and a relative canonical URL of <code>./</code>.</p>
+    <p>Every page on this demo sends a <code>noindex</code> robots meta tag and a relative canonical URL of <code>./</code>. Show pages live at <code>podcasts/&#123;slug&#125;/</code>.</p>
   </article>
 </main>
 <footer class="site-foot">
   <div class="wrap">
     <p>Where to Listen is a browse-only catalog. It does not host, sell, or mirror episode audio.</p>
-    <p>Show titles, feeds, and artwork addresses come from each publisher’s public RSS. Short descriptions on this site are original paraphrases. See the About page.</p>
+    <p>Show titles, feeds, and artwork addresses come from each publisher’s public RSS. Descriptions on this shelf are catalog copy edited for these pages. See the About page.</p>
   </div>
 </footer>
 <script src="js/theme.js"></script>

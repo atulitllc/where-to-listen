@@ -1,0 +1,12 @@
+title: Where to Listen
+exclude:
+  - NOTES.md
+  - README.md
+  - CREDITS.md
+  - data
+  - tools
+  - .github
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules

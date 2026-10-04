@@ -53,10 +53,13 @@ def slugify(title):
     return (s or "show")[:70]
 
 def shorten(desc):
-    text = re.sub(r"<[^>]+>", " ", desc or "")
+    text = re.sub(r"<!\[CDATA\[|\]\]>", " ", desc or "")
+    text = re.sub(r"<[^>]+>", " ", text)
     text = html.unescape(text)
+    text = re.sub(r"https?://\S+", " ", text)
+    text = re.sub(r"hosted on acast\.?\s*(see\s*)?acast\.com/privacy for more information\.?", " ", text, flags=re.I)
+    text = re.sub(r"acast\.com/privacy.*", " ", text, flags=re.I)
     text = re.sub(r"\s+", " ", text).strip()
-    text = re.sub(r"https?://\S+", "", text).strip()
     if len(text) < 40:
         return ""
     if len(text) <= 240:
@@ -159,9 +162,13 @@ def parse_rss(raw):
         im = re.search(r"<image>.*?<url>(.*?)</url>", head, re.I | re.S)
         image = clean(im.group(1)) if im else ""
     desc = ""
-    dm = re.search(r"<description(?:\s[^>]*)?>(.*?)</description>", head, re.I | re.S)
-    if dm:
-        desc = dm.group(1)
+    for name in ("itunes:summary", "description", "itunes:subtitle"):
+        dm = re.search(rf"<{name}(?:\s[^>]*)?>(.*?)</{name}>", head, re.I | re.S)
+        if not dm:
+            continue
+        candidate = shorten(dm.group(1))
+        if len(candidate) > len(desc):
+            desc = candidate
     explicit = tag(head, "itunes:explicit").lower() in ("yes", "true", "explicit")
     ep = tag(item, "title") if item else ""
     pub = tag(item, "pubDate") if item else ""

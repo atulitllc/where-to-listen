@@ -336,6 +336,58 @@ html[data-theme="dark"] .knob::after { transform: translateX(14px); }
   margin-left: 0.4rem;
   vertical-align: middle;
 }
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem 1.2rem;
+  margin: 0 0 1.1rem;
+  max-width: 42rem;
+}
+.facts div { margin: 0; }
+.facts dt {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.facts dd { margin: 0.15rem 0 0; font-size: 1.02rem; }
+.description p { font-size: 1.05rem; max-width: 42rem; margin: 0 0 0.85rem; }
+.related {
+  margin-top: 2.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+.related h2 {
+  font-family: var(--display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 2rem;
+  margin: 0 0 0.8rem;
+}
+.related ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.55rem;
+}
+.related li { margin: 0; }
+.related a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.75rem 0.85rem;
+  min-height: 100%;
+}
+.related a:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+.related a strong { font-weight: 600; line-height: 1.25; }
+.related a span { color: var(--muted); font-size: 0.86rem; }
 .prose { max-width: 42rem; }
 .prose h1 {
   font-family: var(--display);

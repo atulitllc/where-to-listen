@@ -10,9 +10,10 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 
 - Podcast Index API keys were not in the environment, so the API was not used.
 - Podcast Index API terms (section 5.5) do not allow a permanent database of content returned from the API. This site does not contain one.
-- Metadata that is on the pages was read from each show’s public RSS on Oct 3, 2026: title, feed URL, artwork URL, latest episode title and date.
-- A core set of blurbs was written for the shelf. The rest are trimmed openings of each show’s own feed summary, not a feed HTML dump and not a Podcast Index dump.
-- Outbound links are the official site and the official RSS only. Enclosure URLs were discarded and are not in `data/shows.json` or the HTML.
+- Metadata that is on the pages was read from each show’s public RSS on Oct 3, 2026: title, feed URL, artwork URL, language tag, latest episode title and date.
+- Descriptions are catalog copy edited for this shelf. They are not a feed HTML dump and not a Podcast Index dump.
+- Outbound links are the official site and the official RSS only. Enclosure URLs were discarded and are not in the HTML.
+- Slugs already in the catalog stay frozen. Titles that had collapsed to `show`, `show-N`, `lin`, or `101` use a readable slug derived from the show name.
 - For Behind the Bastards, the newest item in the iHeart feed was a sibling show (“It Could Happen Here”). The page uses the newest item that is actually a Behind the Bastards episode.
 - Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top.
 
@@ -32,15 +33,18 @@ Every page has a Light / Dark control in the header.
 ## SEO
 
 Every HTML page includes `<meta name="robots" content="noindex">` and `<link rel="canonical" href="./">`.
+The home title is `Podcast catalog | Where to Listen`. Each show title is `{Show name} | Where to Listen`.
+Show URLs are `podcasts/{slug}/` with a trailing slash. Each show page has one `PodcastSeries` JSON-LD block whose `webFeed` is that show’s publisher RSS.
 
 ## Rebuild
 
 ```bash
+python3 tools/fetch_feed_copy.py
 python3 tools/build_site.py
 ```
 
-`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/editorial.json` holds hosts, categories, official sites, and original blurbs. The script writes `index.html`, `about.html`, `shows/*.html`, and `data/shows.json`.
+`data/feed_snapshot.json` is the checked metadata from the RSS reads. `data/feed_copy.json` holds channel language, publisher, and summary text used to write descriptions. `data/editorial.json` holds hosts, categories, official sites, and original blurbs for the first set of shows. The script writes `index.html`, `about.html`, `404.html`, and `podcasts/{slug}/index.html`.
 
 ## GitHub Pages
 
-The site is plain static files at the repository root, with `.nojekyll` so Pages will not run Jekyll.
+Pages serves the repository root through Jekyll. `_config.yml` excludes `NOTES.md`, `README.md`, `CREDITS.md`, `data/`, and `tools/`, so those files stay in the repo and are not part of the published site. There is no `.nojekyll` file, because that would turn the exclude list off.
