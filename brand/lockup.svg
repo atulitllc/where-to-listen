@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 516 120" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 120" fill="none">
   <g transform="translate(8 20)">
   <defs>
     <linearGradient id="wtlWave" x1="8" y1="40" x2="88" y2="40" gradientUnits="userSpaceOnUse">
@@ -29,5 +29,5 @@
   </g>
 
   </g>
-  <text x="124" y="74" font-family="Outfit, 'Avenir Next', 'Segoe UI', sans-serif" font-size="52" font-weight="600" letter-spacing="-0.6"><tspan fill="#8B6CF6">findthis</tspan><tspan fill="#2DD4BF">podcast</tspan></text>
+  <text x="124" y="74" font-family="Outfit, 'Avenir Next', 'Segoe UI', sans-serif" font-size="52" font-weight="600" letter-spacing="-0.6"><tspan fill="#8B6CF6">Where to </tspan><tspan fill="#2DD4BF">Listen</tspan></text>
 </svg>
