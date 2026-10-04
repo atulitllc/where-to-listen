@@ -35,7 +35,7 @@ Every page has a Light / Dark control in the header.
 ## SEO
 
 No HTML page sends a sitewide `noindex`. Every page includes `<link rel="canonical">` and `<meta property="og:url">`. Those URLs are absolute `https://findthispodcast.com` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `https://findthispodcast.com/`. A show page uses `https://findthispodcast.com/podcasts/{slug}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
-`sitemap.xml` lists indexable URLs only: the home page, each category hub (`/categories/{slug}/`, not numbered `page/n` lists), and each podcast show page. Every `<loc>` is `https://findthispodcast.com/...`. `robots.txt` names it with `Sitemap: https://findthispodcast.com/sitemap.xml`.
+`sitemap.xml` lists indexable URLs only: the home page, the about page (`/about/`), each category hub (`/categories/{slug}/`, not numbered `page/n` lists), and each podcast show page. Every `<loc>` is `https://findthispodcast.com/...`. `robots.txt` names it with `Sitemap: https://findthispodcast.com/sitemap.xml`.
 Each page has a `WebSite` node whose `url` is `https://findthispodcast.com/` and a `WebPage` node whose `url` is that page. A show page also has one `PodcastSeries` node whose `url` is the absolute show page and whose `webFeed` is that show’s publisher RSS.
 The home title is `Podcast catalog | Where to Listen`. Each show title is `{Show name} | Where to Listen`.
 Show URLs are `podcasts/{slug}/` with a trailing slash.

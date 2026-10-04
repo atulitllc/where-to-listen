@@ -1396,7 +1396,7 @@ Every page has a Light / Dark control in the header.
 ## SEO
 
 No HTML page sends a sitewide `noindex`. Every page includes `<link rel="canonical">` and `<meta property="og:url">`. Those URLs are absolute `{SITE_ORIGIN}` addresses with the trailing slash that page already uses. Home, including `/index.html`, uses `{SITE_ORIGIN}/`. A show page uses `{SITE_ORIGIN}/podcasts/{{slug}}/`. Generators read `SITE_ORIGIN`. Nothing points at github.io or www.
-`sitemap.xml` lists indexable URLs only: the home page, each category hub (`/categories/{{slug}}/`, not numbered `page/n` lists), and each podcast show page. Every `<loc>` is `{SITE_ORIGIN}/...`. `robots.txt` names it with `Sitemap: {SITE_ORIGIN}/sitemap.xml`.
+`sitemap.xml` lists indexable URLs only: the home page, the about page (`/about/`), each category hub (`/categories/{{slug}}/`, not numbered `page/n` lists), and each podcast show page. Every `<loc>` is `{SITE_ORIGIN}/...`. `robots.txt` names it with `Sitemap: {SITE_ORIGIN}/sitemap.xml`.
 Each page has a `WebSite` node whose `url` is `{SITE_ORIGIN}/` and a `WebPage` node whose `url` is that page. A show page also has one `PodcastSeries` node whose `url` is the absolute show page and whose `webFeed` is that show’s publisher RSS.
 The home title is `{HOME_TITLE}`. Each show title is `{{Show name}} | Where to Listen`.
 Show URLs are `podcasts/{{slug}}/` with a trailing slash.
@@ -1556,8 +1556,8 @@ def check_seo(page, path, label, problems, series=False):
 
 
 def indexable_paths(shows):
-    """Home, category hubs, and show pages. Not pagination, about, or the 404."""
-    paths = ["/"]
+    """Home, about, category hubs, and show pages. Not pagination or the 404."""
+    paths = ["/", "/about/"]
     for cat in ordered_categories(shows):
         paths.append(f"/categories/{cat_slug(cat)}/")
     for show in shows:
@@ -1630,6 +1630,8 @@ def audit_sitemap(shows, problems):
             break
     if absolute_url("/") not in locs:
         problems.append("sitemap missing home")
+    if absolute_url("/about/") not in locs:
+        problems.append("sitemap missing about")
     for cat in ordered_categories(shows):
         hub = absolute_url(f"/categories/{cat_slug(cat)}/")
         if hub not in locs:
