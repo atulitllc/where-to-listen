@@ -17,6 +17,7 @@ A static HTML mock of a browse-only podcast shelf: a home grid, one page per sho
 - For Behind the Bastards, the newest item in the iHeart feed was a sibling show (“It Could Happen Here”). The page uses the newest item that is actually a Behind the Bastards episode.
 - Slow Burn was left out. The feed URL associated with that name was serving a different Slate show at the top. Checked again on Oct 4, 2026: that feed was still another Slate show.
 - On Oct 4, 2026, 78 narrative series were added from each publisher’s own RSS. New show pages use a multi-paragraph catalog essay. Flagship pages that were still a sentence or two use the same kind of essay. Other pages use sentences already in the publisher summary, packed into as many as five paragraphs when the summary is long enough.
+- The build fails when two non-featured descriptions match after the show title is removed. Handwritten flagship notes are the featured set and are left as stored.
 
 ## Design
 
