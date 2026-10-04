@@ -1252,6 +1252,15 @@ def visible_text(page):
     return text
 
 
+# Header wordmark is findthispodcast (no .com). Page titles still say Where to Listen.
+OLD_WORDMARK = '<strong>Where to <span class="accent">Listen</span></strong>'
+
+
+def check_wordmark(page, label, problems):
+    if WORDMARK not in page or OLD_WORDMARK in page:
+        problems.append(f"wordmark {label}")
+
+
 def audit(shows):
     problems = []
     pages = [ROOT / "index.html", ROOT / "about.html", ROOT / "about" / "index.html", ROOT / "404.html"]
@@ -1412,6 +1421,7 @@ def audit(shows):
             problems.append(f"public head {name}")
         if "atulit" in page.lower() or "findthispodcast.com" in page.lower() or WORDMARK not in page:
             problems.append(f"brand {name}")
+        check_wordmark(page, name, problems)
         check_anchors(page, name, problems)
         visible = visible_text(page)
         visible = re.sub(r"the dale jr\.?\s+download", "", visible, flags=re.I)

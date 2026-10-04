@@ -322,12 +322,19 @@ html[data-theme="dark"] .knob::after { transform: translateX(14px); }
 .sleeve .cat {
   position: absolute;
   z-index: 2;
-  top: 0.45rem;
-  left: 0.45rem;
-  background: rgba(20, 16, 12, 0.78);
-  color: #fff;
-  padding: 0.2rem 0.45rem;
+  top: 0.7rem;
+  left: 0.7rem;
+  max-width: calc(100% - 1.4rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
   border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  color: var(--ink);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(6px);
   line-height: 1.2;
 }
 .initials {
