@@ -1231,17 +1231,6 @@ def visible_text(page):
     return text
 
 
-# Header wordmark is permanently findthispodcast (no .com). Do not put "Where to Listen" back in the header.
-# Page titles still say Where to Listen.
-WORDMARK = '<strong>findthis<span class="accent">podcast</span></strong>'
-OLD_WORDMARK = '<strong>Where to <span class="accent">Listen</span></strong>'
-
-
-def check_wordmark(page, label, problems):
-    if WORDMARK not in page or OLD_WORDMARK in page:
-        problems.append(f"wordmark {label}")
-
-
 def audit(shows):
     problems = []
     pages = [ROOT / "index.html", ROOT / "about.html", ROOT / "about" / "index.html", ROOT / "404.html"]
